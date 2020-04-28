@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,
 	amssymb,
-	bibunits,
+%	bibunits,
 	datetime,
 	hyperref,
 	cleveref,
@@ -18,15 +18,20 @@
 	url,
  	graphicx}
 \usepackage[dvipsnames]{xcolor}
+\usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
+\addbibresource{FJHown23.bib}
+\addbibresource{FJH23.bib}
 \title{QMC Blog Posts}
 \author{QMCPy Crew}
 \date{April 2020}
 \input FJHDef.tex
 
-\newcommand{\blogpost}[3]{\begin{bibunit}[amsalpha]\newpage%
-\section{#1} Lead(s): #2 \bigskip #3%
-\putbib[FJH23.bib,FJHown23.bib]
-\end{bibunit}%
+\newcommand{\blogpost}[3]{\newpage%
+\section{#1}%
+\begin{refsection}%
+	Lead(s): #2 \bigskip #3%
+\printbibliography[heading=subbibliography]
+\end{refsection}
 } %This command provides a new section and bibliography for each blogpost
 
 \newcommand{\myshade}{60}
