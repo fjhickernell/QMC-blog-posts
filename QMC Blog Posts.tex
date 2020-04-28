@@ -25,7 +25,7 @@
 
 \newcommand{\blogpost}[3]{\begin{bibunit}[amsalpha]\newpage%
 \section{#1} Lead(s): #2 \bigskip #3%
-\putbib[FJH23.bib,FJHown23.bib]
+\putbib[FJH23,FJHown23]
 \end{bibunit}%
 } %This command provides a new section and bibliography for each blogpost
 
@@ -70,19 +70,29 @@ If $Y$ is the quantity of interest, e.g., profit (or loss) one month from now, a
 \[
 \mu = \Ex(Y) \approx \frac 1n \bigl ( Y_1 + \cdots + Y_n \bigr) = \hmu_n.
 \]
-We are using an mean based on $n$ scenarios to approximate the true mean, which is based on an infinite number of scenarios.
+We are using a mean based on $n$ scenarios to approximate the true mean, which is based on an infinite number of scenarios.
 
 Simple MC chooses $Y_1, \ldots, Y_n$ to be independent and identically distributed (IID).  Intuitively, this means that any $Y_i$ is chosen with no relationship to the other and all $Y_i$ come from the same probability distribution or model that generates the scenarios.
 
 While this is a good idea, we can do better.  By choosing $Y_1, \ldots, Y_n$ to be more representative of the infinite number of possible scenarios, we can make $\hmu$ a better estimate of the mean.
 
-The model that generates $Y$ is often written as $Y= f(\vX)$, where $\vX$ is a uniformly distributed vector in the $d$-dimensional unit cube $[0,1]^d$.  If $Y_i = f(\vX_i)$ for IID $\vX_i$, then we have simple MC.  Figure \ref{} shows a picture of IID uniform  $\vX_1, \ldots, \vX_{64}$ in $2$ dimensions.  Because the points are IID, there are gaps and clusters.
+The model that generates $Y$ is often written as $Y= f(\vX)$, where $\vX$ is a uniformly distributed vector in the $d$-dimensional unit cube $[0,1]^d$.  If $Y_i = f(\vX_i)$ for IID $\vX_i$, then we have simple MC.  Figure \ref{fig:iid_pts} shows a picture of IID uniform  $\vX_1, \ldots, \vX_{64}$ in $2$ dimensions.  Because the points are IID, there are gaps and clusters.
 
-insert Figure 1 here
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=.6\textwidth]{figures/iid_uniform_pts.png}
+    \caption{64 IID standard uniform points in 2 dimensions.}
+    \label{fig:iid_pts}
+\end{figure}
 
-Figure \ref{} gives an example of $\vX_1, \ldots, \vX_{64}$ used in QMC methods.  These points are called integration lattice points.  Note that they more evenly fill the square than the IID points in Figure \ref{}.
+Figure \ref{fig:lat_pts} gives an example of $\vX_1, \ldots, \vX_{64}$ used in QMC methods.  These points are called integration lattice points.  Note that they more evenly fill the square than the IID points in Figure \ref{}.
 
-insert Figure 2 here
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=.6\textwidth]{figures/lattice_pts.png}
+    \caption{64 shifted lattice points in 2 dimensions.}
+    \label{fig:lat_pts}
+\end{figure}
 
 Because these QMC points  are more even, they can give $\hmu_n$ with an error of nearly $\Order(n^{-1})$.  In contrast, the error of simple MC $\hmu_n$ is typically $\Order(n^{-1/2})$.  That's the reason to add Q to MC.
 
