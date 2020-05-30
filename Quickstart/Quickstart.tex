@@ -1,29 +1,22 @@
-In this tutorial, we introduce QMCPy~\cite{QMCPy2020a}  by example. First, we proposed a mathematical framework for quasi-Monte Carlo problems. Then we develop an example within this framework using the QMCPy package.
+In this tutorial, we introduce QMCPy \cite{QMCPy2020a_alt}  by example. QMCPy can be installed with \texttt{pip install qmcpy} or cloned from the  \href{https://github.com/QMCSoftware/QMCSoftware/tree/master/python_prototype}{QMCSoftware GitHub repository}.
 
-\subsection{Mathematical Background}
-In general, QMCPy works to approximate the expectation of an integrand $g$ with respect to a true measure~$\rho$ defined over domain $\mathcal{X}$. 
+Consider the problem of integrating the Keister function \cite{Kei96} with respect to a $d$-dimensional Gaussian measure: 
+\begin{gather*}
+    \text{Keister}(\vx) = \pi^{d/2} \cos(||\vx||), \qquad \vx \in \reals^d, \qquad \vX \sim \mathcal{N}(\vzero_d,\mI_d/2),  \\
+    \Ex[\text{Keister}(\vX)] : = \int_{\reals^d} \text{Keister}(\vx) \, \pi^{-d/2} \exp( - ||\vx||^2) \,  \dif \vx = ?,
+\end{gather*}
+where $||\vx||$ is the \href{https://en.wikipedia.org/wiki/Norm_(mathematics)}{Euclidean norm} and $\mI_d$ is the $d$ dimensional identity matrix. The Keister function is implemented below with help from NumPy \cite{numpy}.
 
-$$\mu = \mathbb{E}(g(\mathbf{x})) = \int_{\mathcal{X}} g(\mathbf{x}) \rho(\mathbf{x}) d\mathbf{x}.$$
-
-QMCPy transforms the true measure $\rho$ to a measure $\nu$ that can be easily sampled from a discrete probability measure $\hat{\nu}$ with domain $\tilde{\mathcal{X}}$. To accommodate the measure transform, the original integrand $g$ is transformed into a new integrand~$f$.
-
-$$\mu = \int_{\tilde{\mathcal{X}}} f(\mathbf{x}) \nu(\mathbf{x}) d\mathbf{x} = \int_{\mathcal{X}} g(\mathbf{x}) \rho(\mathbf{x}) d\mathbf{x}.$$
-
-QMCPy approximates the expectation to be the average of $n$ weighted evaluations of $f$ at samples from $\hat{\nu}$. A stopping criterion (algorithm to determine $n$) is required to approximate the integral to within a tolerance $\epsilon$. 
-
-$$\int_{\mathcal{X}} f(\mathbf{x}) \nu(\mathbf{x}) d\mathbf{x} \approx a_i \sum_{i=1}^n f(\mathbf{x}) w_i = \hat{\mu}_n,$$
-$$|\mu-\hat{\mu}_n|<\epsilon.$$
-
-\subsection{Keister Example}
-In this example we look at the $d$ dimensional Keister integrand with a $\mathcal{N}_d(0,\frac{1}{2}I)$ true measure, lattice discrete distribution, and lattice cubature stopping criterion. 
-$$g(\mathbf{x}) = \pi^{d/2} \cos(||\mathbf{x}||_2) \qquad \text{for} \qquad \mathbf{x} \sim \mathcal{N}_d(0,\frac{1}{2}) = \rho.$$
-
-
-First we set up the Keister function with help from the numpy package.
 \lstinputlisting[style=Python]{Quickstart/snip1.py}
 
-Then, we define our discrete distribution, true measure, integrand, and stopping criterion objects. When the QMCPy object is passed into another objects constructor the transformation from $g$ to $f$ and $\rho$ to $\nu$ are automatically configured. 
+In addition to our Keister integrand and Gaussian true measure, we must select a discrete distribution and stopping criterion. The stopping criterion determines the number of points at which to evaluate the integrand in order for the mean approximation to be within a specified error tolerance. The discrete distribution determines the sites at which the integrand is evaluated.
+
+For the Keister example we select the lattice sequence as the discrete distribution and corresponding cubature-based stopping criterion. The discrete distribution, true measure, integrand, and stopping criterion are then constructed within the QMCPy framework below. 
+
 \lstinputlisting[style=Python]{Quickstart/snip2.py}
 
-The integrate method of the stopping\_criterion object returns the numerical solution and a data object. Printing the data object will provide a neat summary of the integration problem.
+Calling \textit{integrate} on the \textit{stopping\_criterion} returns the numerical solution and a data object. Printing the data object will provide a neat summary of the integration problem.
+
 \lstinputlisting[style=Python]{Quickstart/snip3.py}
+
+This guide is not meant to be exhaustive but rather a quick introduction to the QMCPy framework and syntax. In the following blog we will take a closer look at low-discrepancy sequences such as the lattice sequence from the above example.  

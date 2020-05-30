@@ -17,7 +17,15 @@
 	colortbl,
 	siunitx,
 	url,
+	xspace,
  	graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 \definecolor{darkgreen}{rgb}{0,0.6,0}
@@ -31,19 +39,21 @@
 }
 
 \usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
+\newcommand{\HickernellFJ}{Hickernell\xspace}
+\addbibresource{main.bib}
 \addbibresource{FJHown23.bib}
 \addbibresource{FJH23.bib}
 \title{QMC Blog Posts}
 \author{QMCPy Crew}
-\date{April 2020}
+\date{May 2020}
 \input FJHDef.tex
 
-\newcommand{\blogpost}[3]{\newpage%
+\newcommand{\blogpost}[4]{\newpage%
 \section{#1}%
 \begin{refsection}%
     \label{#3}%
 	Author(s): #2 \newline \newline%
-	\input{#3.tex}%
+	\input{#4.tex}%
 \printbibliography[heading=subbibliography]
 \end{refsection}
 } %This command provides a new section and bibliography for each blogpost
@@ -84,25 +94,25 @@ Fred prefers to have each blog focus on just one idea, short and sweet.
 
 The Google doc where we are defining the launch concept around the blogs is here \url{https://docs.google.com/document/d/1DcDdmwdUDCNKxGwUWCyQUjkTuQjhn-dskajlnEq14bo/edit?usp=sharing}
 
-\blogpost{Why Add Q to MC?}{Fred Hickernell}{WhyQ/WhyQ}
+\blogpost{Why Add Q to MC?}{Fred Hickernell}{whyq}{WhyQ/WhyQ}
 
-\blogpost{QMCPy Quick Start}{Sou-Cheng Choi and Aleksei Sorokin}{Quickstart/Quickstart}
+\blogpost{A QMCPy Quick Start}{Sou-Cheng Choi and Aleksei Sorokin}{quickstart}{Quickstart/Quickstart}
 
-\blogpost{What Makes a Sequence ``Low Discrepancy"?}{Fred Hickernell}{LDS/LDS}
+\blogpost{What Makes a Sequence ``Low Discrepancy''?}{Fred Hickernell}{lds}{LDS/LDS}
 
-\blogpost{A Brief History of Quasi-Monte Carlo}{}{}
+\blogpost{A Brief History of Quasi-Monte Carlo}{}{}{}
 
-\blogpost{The People of Quasi-Monte Carlo}{}{}
+\blogpost{The People of Quasi-Monte Carlo}{}{}{}
 
-\blogpost{Be Careful Replacing IID Sequences by Low Discrepancy Sequences}{}{}
+\blogpost{Be Careful Replacing IID Sequences by Low Discrepancy Sequences}{}{}{}
 
-\blogpost{Randomizing Your Low Discrepancy Points Helps}{}{}
+\blogpost{Randomizing Your Low Discrepancy Points Helps}{}{}{}
 
-\blogpost{What to Do when the Dimension is Infinite}{}{}
+\blogpost{What to Do when the Dimension is Infinite}{}{}{}
 
-\blogpost{Variation/Variance Reduction for QMC}{}{}
+\blogpost{Variation/Variance Reduction for QMC}{}{}{}
 
-\blogpost{When QMC Does Not Help}{}{}
+\blogpost{When QMC Does Not Help}{}{}{}
 
 
 \end{document}
