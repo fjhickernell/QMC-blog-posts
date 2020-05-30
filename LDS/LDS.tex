@@ -1,1 +1,14 @@
-Blog Post \ref{whyq} introduced the concept of evenly spread points, which are commonly referred to as \emph{low discrepancy} points. \cite{Hic97a}
+Blog Post \ref{whyq} introduced the concept of evenly spread points, which are commonly referred to as \emph{low discrepancy} points.  This is in contrast to independent and identically distributed (IID) points.  
+
+Consider two sequences,
+\begin{equation}
+    \vX_1, \vX_2, \ldots \overset{\text{IID}}{\sim} \cu[0,1]^d, \qquad \vT_1, \vT_2, \ldots \overset{\text{LD}}{\sim} \cu[0,1]^d.
+\end{equation}
+Both sequences are expected to look like points spread uniformly over the unit cube, $[0,1]^d$.  
+The first sequence must be random, or as random looking as our deterministic random number generators can make it.  Since the points are independent, the location of any $\vX_i$ should have no bearing on the location of any other $\vX_j$.  Removing a point at random does not affect the IID property.
+
+The second sequence may be random or deterministic.  Let $F_{\{\vT_1, \ldots, \vT_n\}}$ denote the empirical distribution function of the first $n$ points of this sequence, i.e., the probability distribution that assigns a probability $1/n$ to each location $\vT_i$.  For $\vT_1, \vT_2, \ldots$ to be a low discrepancy sequence, $F_{\{\vT_1, \ldots, \vT_n\}}$ should be close to the uniform probability distribution, $F_{\text{unif}}(\vx) = x_1 \cdots x_d$.  ``Close'' implies that we can measure how far apart two distributions are, and we call this measure the \emph{discrepancy}.
+
+Just like beauty is in the eye of the beholder, so there are different  
+
+\cite{Hic97a}
