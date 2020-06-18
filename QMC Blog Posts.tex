@@ -18,7 +18,10 @@
 	siunitx,
 	url,
 	xspace,
- 	graphicx}
+ 	graphicx,
+ 	bigints,
+ 	textcomp}
+
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
@@ -35,7 +38,10 @@
     keywordstyle    = \color{blue},
     keywordstyle    = [2] \color{teal}, % just to check that it works
     stringstyle     = \color{green},
-    commentstyle    = \color{darkgreen}\ttfamily
+    commentstyle    = \color{darkgreen}\ttfamily,
+    frame=single,
+    numbers=left,
+    upquote=true % straight quote; need textcop package
 }
 
 \usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
@@ -76,6 +82,9 @@
 \newcommand{\MikeComment}[1]{{\color{orange} Mike: #1}}
 \newcommand{\JagsComment}[1]{{\color{violet} Jags: #1}}
 \DeclareMathOperator{\disc}{disc}
+
+\newcommand{\R}{{\mathbb{R}}} % reals
+
 
 \theoremstyle{definition}
 \newtheorem{example}{Example}[section]
