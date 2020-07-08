@@ -10,7 +10,7 @@ The first sequence must be random, or as random looking as our (deterministic) r
 
 The second sequence may be random or deterministic.  Let $F_{\{\vX_1, \ldots, \vX_n\}}$ denote the empirical distribution function of the first $n$ points of this sequence, i.e., the probability distribution that assigns a probability of $1/n$ to each location $\vX_i$.  For $\vX_1, \vX_2, \ldots$ to be LD, $F_{\{\vX_1, \ldots, \vX_n\}}$ should be close to the uniform probability distribution, $F_{\text{unif}}: \vx \mapsto x_1 \cdots x_d$.
 
-``Close'' implies that we can measure how far apart two distributions are, and we call this measure the \emph{discrepancy}. Just like beauty is in the eye of the beholder, so there are different measurements of discrepancy.  They tend to take the form of a the distance between the empirical distribution of the point set, $F_{\{\vX_1, \ldots, \vX_n\}}$, and the target measure, $F_{\text{unif}}$. An example is the star discrepancy:
+``Close'' implies that we can measure how far apart two distributions are.  We call this measure the \emph{discrepancy}. Just like beauty is in the eye of the beholder, so there are different measurements of discrepancy.  They tend to take the form of a the distance between the empirical distribution of the point set, $F_{\{\vX_1, \ldots, \vX_n\}}$, and the target measure, $F_{\text{unif}}$. An example is the star discrepancy \cite[(3.16)]{DicEtal14a}:
 \begin{equation*}
         \disc(\{\vX_1, \ldots, \vX_n\}) : = \sup_{\vx \in [0,1]^d}  \abs{F_{\text{unif}} (\vx) - F_{\{\vX_1, \ldots, \vX_n\}}(\vx)},
 \end{equation*}
@@ -28,7 +28,7 @@ For such a kernel, we may define a discrepancy as
         & : = \int_{[0,1]^d \times [0,1]^d} K(\vt, \vx) \, \dif (F_{\text{unif}} - F_{\{\vX_1, \ldots, \vX_n\}})(\vt) \, \dif (F_{\text{unif}} - F_{\{\vX_1, \ldots, \vX_n\}}) (\vx) \\
         & = \int_{[0,1]^d \times [0,1]^d} K(\vt, \vx) \, \dif \vt  \dif \vx
         - \frac 2n \sum_{i=1}^n  \int_{[0,1]^d} K(\vx_i,\vx) \, \dif \vx \\
-        & \qquad \qquad + \frac{1}{n^2} \sum_{i,j=1}^n K(\vx_i, \vx_j)
+        & \qquad \qquad + \frac{1}{n^2} \sum_{i,j=1}^n K(\vx_i, \vx_j).
 \end{align*}
 
 For example, the centered $L^2$-discrepancy \cite{Hic97a} is defined in terms of the kernel
@@ -45,7 +45,9 @@ This discrepancy only requires $\Order(dn^2)$ operations to evaluate.
 
 LD sequences have discrepancies of $\Order(n^{-1 +\epsilon})$ for the discrepancies illustrated above.  IID sequences have root mean square discrepancies of $\Order(n^{-1/2})$.  This difference is asymptotic order can translate into orders of magnitude improvements in the accuracy of numerical solutions.
 
-For high dimensional problems introducing coordinate weights into the 
+For problems where $d$ is large, the discrepancies defined above do not decay so quickly.  However, if these discrepancy definitions are modified to include \emph{coordinate weights} \cite[Section 4]{DicEtal14a}, then they retain their $\Order(n^{-1 +\epsilon})$ decay. Coordinate weights express the assumption that certain coordinates contribute more to the variation of the function than others.
+
+Demonstrating that a particular sequence is LD can be done by brute force computation, which requires in general $\Order(dn^2)$ operations. For certain sequences matched with certain discrepancy definitions, this can be reduced to $\Order(dn)$ operations. If $n$ is small enough, the search for an LD set can be performed using global optimization algorithms \cite{WinFan97a}.  Number theoretic arguments are used to construct certain popular LD sequences \cite{DicPil10a,Nie92}.
 
 
 
