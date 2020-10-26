@@ -54,12 +54,12 @@
 \date{May 2020}
 \input FJHDef.tex
 
-\newcommand{\blogpost}[4]{\newpage%
-\section{#1}%
+\newcommand{\blogpost}[5][{}]{\newpage%
+\section{#2 {\color{teal}#1}}%
 \begin{refsection}%
-    \label{#3}%
-	Author(s): #2 \newline \newline%
-	\input{#4.tex}%
+    \label{#4}%
+	Author(s): #3 \newline \newline%
+	\input{#5.tex}%
 \printbibliography[heading=subbibliography]
 \end{refsection}
 } %This command provides a new section and bibliography for each blogpost
@@ -104,11 +104,19 @@ Fred prefers to have each blog focus on just one idea, short and sweet.
 
 The Google doc where we are defining the launch concept around the blogs is here \url{https://docs.google.com/document/d/1DcDdmwdUDCNKxGwUWCyQUjkTuQjhn-dskajlnEq14bo/edit?usp=sharing}
 
-\blogpost{Why Add Q to MC?}{Fred Hickernell}{whyq}{WhyQ/WhyQ}
+\blogpost[published June 25, 2020]{Why Add Q to MC?}{Fred Hickernell}{whyq}{WhyQ/WhyQ}
 
-\blogpost{A QMCPy Quick Start}{Sou-Cheng Choi and Aleksei Sorokin}{quickstart}{Quickstart/Quickstart}
+\blogpost[published July 6, 2020]{A QMCPy Quick Start}{Sou-Cheng Choi and Aleksei Sorokin}{quickstart}{Quickstart/Quickstart}
 
-\blogpost{What Makes a Sequence ``Low Discrepancy''?}{Fred Hickernell}{lds}{LDS/LDS}
+\blogpost[published July 8, 2020]{What Makes a Sequence ``Low Discrepancy''?}{Fred Hickernell}{lds}{LDS/LDS}
+
+\blogpost{Digital Sequences in QMCPy}{Aleksei Sorokin}{sobol}{Sobol/sobol_in_qmcpy}
+
+\blogpost{Samples Sizes for LD Sequences}{}{}{}
+
+\blogpost{Bayesian Stopping Criteria}{Jagadeeswaran R}{}{}
+
+\blogpost{Different Compiler Requirements}{Jagadeeswaran R and Aleksei Sorokin}{}{}
 
 \blogpost{Historical Highlights for Quasi-Monte Carlo}{Fred Hickernell}{history}{History/History}
 
@@ -123,6 +131,8 @@ The Google doc where we are defining the launch concept around the blogs is here
 \blogpost{Variation/Variance Reduction for QMC}{}{}{}
 
 \blogpost{When QMC Does Not Help}{}{}{}
+
+\blogpost{Math 565 Final project posts}{}{}{}
 
 
 \end{document}

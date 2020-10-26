@@ -8,6 +8,6 @@ true_measure = qmcpy.Gaussian(
 integrand = qmcpy.CustomFun(
     measure = true_measure,
     custom_fun = keister)
-stopping_criterion = qmcpy.CubQmcLatticeG(
+stopping_criterion = qmcpy.CubQMCLatticeG(
     integrand = integrand,
     abs_tol = 1e-4)
