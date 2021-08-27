@@ -1,0 +1,46 @@
+\MikeComment{I see you using texttt, but I think verb is better.  I don't really care, but it can be an issue when using certain symbols} \AGSComment{I think they have a code font in WordPress. I'll make sure all the symbols port over into a nice font.}
+
+\MikeComment{I generally don't use contractions in my writing.  I don't care if you want to, but I just want you to be sure that you want it (and did not write it incorrectly).}
+
+\MikeComment{Are we using a random number generator that we wrote?  That's what this sounds like ... I assume we can simply be using some standard public tool?  Or am I reading this part about MRG63k3a incorrectly?} \AGSComment{The default RNG in C is not very good and doesn't have enough precision (as far as I can tell).  I added a citation for MRG63k3a, written by Pierre L'Ecuyer. }
+
+%%%%%%%%%%%%%%
+
+Many Python packages rely on underlying C or C++ code to speed up their numerical methods. For example, \href{https://numpy.org/}{NumPy} calls C and C++ ``extensions'' in order to speed up matrix manipulation algorithms. 
+
+Real Python's article, \href{https://realpython.com/python-bindings-overview/#python-bindings-overview}{\emph{Python Bindings: Calling C or C++ From Python}} discusses a few reasons why you may want to utilize C or C++ extensions within your Python package. Perhaps you already have a stable library in C or C++ that you want to call from Python. Our approach in this blog will allow the existing extension to be called from Python with only minor code modifications.  You may also be interested speeding up you Python code by moving it to a compiled language that can optimize subroutines. For example, in QMCPy we have found that many low discrepancy sequence generators are significantly faster when implemented in C.  
+
+So why not implement everything in C or C++? In our experience, Python delivers a convenience, readability, and community engagement that allow for rapid development, testing, and distribution to a large audience of active users. 
+
+While the benefits of moving certain  modules to C/C++ have been well documented, implementing these extensions to play nicely with your existing Python codebase can often be quite tricky. Moreover, writing extensions for platform-independent distribution with PyPI (so someone can \texttt{pip install yourPackage}) can be even more challenging. In this blog post we share how we developed the QMCPy package \cite{QMCPy2020a} to be platform agnostic while utilizing C extensions.
+
+\subsection{C}
+
+When you first explore writing C/C++ extensions you will likely come across \href{https://docs.python.org/3/extending/extending.html}{Python's recommended solution}. This approach requires a good bit of boilerplate code and prohibits plug-and-play of an existing C/C++ library. QMCPy's approach uses the \href{https://docs.python.org/3/library/ctypes.html}{\texttt{ctypes}} library to call a C function with a few lines Python defining the arguments and return values of the compiled function. 
+
+Let us now turn to an example from our QMCPy \cite{QMCPy2020a} library. Based on Art Owen's work in \cite{owen2017randomized}, we wrote the below Halton generator in C. Note that the implementation does \emph{not} contain all the boilerplate code of a native Python solution, but instead may be used as a standalone C file.
+%\MikeComment{Is this primes list correct?  I see two 7 entries and I wanted to make sure that's legit} \AGSComment{Good catch, fixed below.}
+
+\lstinputlisting[style=CStyle]{Clib/halton.c}
+
+A few important notes about the above code are the use of \textbf{\texttt{\#include}} statements, \textbf{\texttt{EXPORT}}, and \textbf{\texttt{long long}}. Depending on the compiler, such as \texttt{gcc} or windows \texttt{cl.exe}, \textbf{\texttt{EXPORT}} allows us to expose a function, in the above case \texttt{halton\_owen}, so that the python code can invoke it. \texttt{EXPORT}ing functions is also an important step in making the C code available to \texttt{ctypes}. The Halton generator utilizes the MRG63k3a random number generator \cite{mrg63k3a} which is stored in a separate file. We can call this function by creating a .h file that defines the external function we wish to call. In \texttt{MRG63k3a.h} we define the \texttt{seed\_MRG63k3a} method which is then included and used in the above Halton generator. 
+
+When your Python package is installed, the C compiler that builds the extensions is platform-specific. We found that the \texttt{gcc} compiler uses 8 bytes to store a \texttt{long} while Window's \texttt{cl.exe} compiler uses only 4. As a workaround, we suggest using the \texttt{long long} datatype which is 8 bytes for both \texttt{gcc} and \texttt{cl.exe}. A nice way to verify you are using \texttt{gcc} and debug these cross-language problems is to intentionally trigger compiler errors.
+
+With these three C files (Halton generator, MRG63k3a, and MRG63k3a's header), we are ready call our function from Python.
+
+\subsection{Python Code}
+
+First, we will use \texttt{ctypes} to define our function from Python. \texttt{ctypes} requires that we define the arguments and return values of our Halton function in order for it to be treated like a native Python function. Below is an example of how to set up and call our Halton function in C using Python.
+
+\lstinputlisting[style=Python]{Clib/halton.py}
+
+The second piece of Python code you will need is a \texttt{setup.py}. The \texttt{setup.py} file define the C extensions of your package and helps prepare your package for distribution on PyPI. While it is possible to compile and call your extension function \emph{without} a \texttt{setup.py} file, we found this method to be the easiest and most straightforward for package distribution.
+
+Below is a snippet from our \texttt{setup.py} file that defines the extensions, packages, and other metadata. Note that we use the \href{https://setuptools.readthedocs.io/en/latest/}{\texttt{setuptools}} package to easily define our distribution properties although  \href{https://docs.python.org/3/library/distutils.html}{\texttt{distutils}} may also be used. 
+
+\lstinputlisting[style=Python]{Clib/setup.py}
+
+When distributing your package on PyPI, you may come across an error regarding missing .h files e.g., the MRG63k3a.h file mentioned earlier. For this file to be included in your distribution, you need to include a \texttt{MANIFEST.in} file that defines all the non-Python and non-C code to be included. That way the .h files (and other files) will be included in your package distribution. We provide a sample from our \texttt{MANIFEST.in} below. 
+
+\lstinputlisting[style=Python]{Clib/manifest.in}

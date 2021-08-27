@@ -1,0 +1,56 @@
+
+
+\paragraph{Fast Bayesian Transforms:}
+Our goal is to find a kernel $C_\vtheta$ to match the design $\mX$, so that
+
+\begin{gather*}
+\mC_\vtheta = \frac 1n \mV \mLambda_\vtheta \mV^H , 
+\quad \quad \mV^H = n \mV^{-1}, \qquad
+\mV = (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n) \quad \text{known analytically} \\
+\vv_1 = \vV_1 = \vone, \qquad \vc_\vtheta = \vone, \qquad
+	\widetilde{\vb} := \mV^H \vb  \text{ requires only $\Order(n \log(n))$ operations } \forall \vb.
+\end{gather*}
+where $C_\vtheta$ is a fast Bayesian transform kernel and $\vb \mapsto \mV^H \vb$ a \alert{fast Bayesian transform (FBT)}. 
+
+Then by empirical Bayes $\widetilde{\vy}$ is the FBT of function data $\vy$, and $\vlambda_\vtheta = \diag(\mLambda_\vtheta) = (\lambda_{\vtheta,1} , \ldots, \lambda_{\vtheta,n})^T=  \widetilde{\vC}_{\vtheta,1}$. Also note that $\widetilde{\vC}_{\vtheta,1}$ is the FBT of first column of  $\mC_\vtheta$. This reduces the computation cost significantly:
+\begin{gather*}
+\vtheta_{\MLE} = 
+\argmin_{\vtheta}
+\left[
+\log\left(
+\sum_{i=\alert{2}}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta, i}}
+\right) 
++ \frac{1}{n}\sum_{i=1}^n \log(\lambda_{\vtheta,i})
+\right], \\
+\hmu(f,\varepsilon) =  \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i = \text{ sample mean}, \\
+\qquad \text{when }
+\frac{2.58}{n}\sqrt{
+	\sum_{i=2}^{n} \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta,i}}  
+	\,
+	\left( 1 -  \frac{n}{\lambda_{\vtheta,1}} \right) 
+} \le \varepsilon
+\end{gather*}
+Now the computation cost is \alert{$O(n \log (n))$} times the number of iterations for optimizing $\vtheta$.
+
+
+
+
+
+
+
+
+\paragraph{Flexible FBT Kernel for Lattice Node Designs:}
+The choice of kernel $C_\vtheta$ and the matching design are essential to achieve FBT. In this experiment we chose, shift invariant kernels and Lattice node designs. The kernel $C_\vtheta(\vt,\vx) = K_\vtheta(\vx \ominus \vt)$ must be \alert{positive definite}, where
+$\oplus = $ addition $\bmod \vone$. A common example is: 
+\begin{align*}
+K_\vtheta(\vx) & = \prod_{j=1}^d [1 + a' B_{2r'}(x_j)] = \prod_{j=1}^d [1 + a \kappa_r(x_j)], \qquad
+\vtheta = (a,r) \in (0,\infty) \times (1,\infty), \quad r = 2r'\\
+\kappa_r(x) &   : = \sum_{\abs{k} \ge 1}\frac{\exp(2\pi\sqrt{-1} kx)}{\abs{k}^{r}} \qquad
+   \text{$B_{2r'}$ closed form, \alert{but $r' \in \naturals$};\quad $\kappa_r$ defined for  $r>1$, {but infinite sum}}.
+\end{align*}
+
+But all we need to compute the integral and credible interval is $\widetilde{\vy}$ and 
+	\[
+	\vlambda_\vtheta =  \widetilde{\vC}_{\vtheta,1}, \qquad \text{where } \vC_{\vtheta,1} = \Bigl(  K_{\vtheta}(\vx_i \ominus \vx_1)\Bigr)_{i=1}^n,  \text{ which only depends on } \kappa_r(\ell/n) \text{ for } \ell = 0, \ldots, n-1 .
+	\]
+Moreover, $\bigl( \kappa_r(\ell/n) \bigr)_{\ell = 0}^{n-1}$ can be computed using one FFT. 

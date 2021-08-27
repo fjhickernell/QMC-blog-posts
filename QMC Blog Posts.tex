@@ -1,5 +1,10 @@
 \documentclass{article}
+
+% reduce margins 
+\usepackage[papersize={8.5in,11in}]{geometry}
+
 \usepackage[utf8]{inputenc}
+\usepackage{verbatim}
 \usepackage{amsmath,
 	amssymb,
 	amsthm,
@@ -27,10 +32,17 @@
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,      
-    urlcolor=cyan,
+    urlcolor=blue,
 }
 \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
+
+% prevents long code lines in listings overflow
+\lstset{
+  basicstyle=\fontfamily{lmvtt}\selectfont\small\color{blue},
+  columns=fullflexible,
+}
+
 \definecolor{darkgreen}{rgb}{0,0.6,0}
 \lstdefinestyle{Python}{
     language        = Python,
@@ -43,7 +55,30 @@
     numbers=left,
     upquote=true % straight quote; need textcop package
 }
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
 
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
 \usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
 \newcommand{\HickernellFJ}{Hickernell\xspace}
 \addbibresource{main.bib}
@@ -55,11 +90,11 @@
 \input FJHDef.tex
 
 \newcommand{\blogpost}[5][{}]{\newpage%
-\section{#2 {\color{teal}#1}}%
+\section{#2 {\color{teal}#1}}%  #1 is publication date, #2 is title
 \begin{refsection}%
-    \label{#4}%
-	Author(s): #3 \newline \newline%
-	\input{#5.tex}%
+    \label{#4}%  #4 is label of section
+	Author(s): #3 \newline \newline% #3 is authors
+	\input{#5.tex}%. #5 is location of the file with the text
 \printbibliography[heading=subbibliography]
 \end{refsection}
 } %This command provides a new section and bibliography for each blogpost
@@ -69,15 +104,25 @@
 \colorlet{mycitecolor}{violet}
 \colorlet{myurlcolor}{YellowOrange}
 
+\begin{comment}
 \hypersetup{
 	linkcolor  = mylinkcolor!\myshade!black,
 	citecolor  = mycitecolor!\myshade!black,
 	urlcolor   = myurlcolor!\myshade!black,
 	colorlinks = true,
 }
+\end{comment}
+
+\renewcommand{\vtheta}{{\bvec{\theta}}}
+\newcommand{\err}{{\textup{err}}}
+\newcommand{\CI}{{\textup{CI}}}
+\newcommand{\MLE}{{\textup{EB}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\bm}[1]{\boldsymbol{#1}}
+\newcommand{\dvt}{\dif{\bm{t}}}
 
 \newcommand{\FredComment}[1]{{\color{blue} Fred: #1}}
-\newcommand{\AGSComment}[1]{{\color{green} Aleksei: #1}}
+\newcommand{\AGSComment}[1]{{\color{cyan} Aleksei: #1}}
 \newcommand{\SCComment}[1]{{\color{red} Sou-Cheng: #1}}
 \newcommand{\MikeComment}[1]{{\color{orange} Mike: #1}}
 \newcommand{\JagsComment}[1]{{\color{violet} Jags: #1}}
@@ -110,13 +155,17 @@ The Google doc where we are defining the launch concept around the blogs is here
 
 \blogpost[published July 8, 2020]{What Makes a Sequence ``Low Discrepancy''?}{Fred Hickernell}{lds}{LDS/LDS}
 
-\blogpost{Digital Sequences in QMCPy}{Aleksei Sorokin}{sobol}{Sobol/sobol_in_qmcpy}
+\blogpost[published Feb 25, 2021]{Speeding up QMCPy with Distributable C Code}{Aleksei Sorokin and Jagadeeswaran Rathinavel}{clib}{Clib/clib}
+
+\blogpost[published Feb 25, 2021]{Visualizing the Internals of Object Classes in QMCPy}{Aleksei Sorokin and Sou-Cheng Choi}{uml}{uml/uml}
+
+\blogpost{Digital Sequences in QMCPy}{Aleksei Sorokin}{sobol}{digital_seq/digital_seq}
 
 \blogpost{Samples Sizes for LD Sequences}{}{}{}
 
-\blogpost{Bayesian Stopping Criteria}{Jagadeeswaran R}{}{}
+\blogpost{Bayesian Stopping Criteria}{Jagadeeswaran R, Fred J. Hickernell}{BayesCub}{BayesCub/bayesianCubature}
 
-\blogpost{Different Compiler Requirements}{Jagadeeswaran R and Aleksei Sorokin}{}{}
+\blogpost{Validating the Gaussian assumption}{Fred J. Hickernell, Jagadeeswaran R}{BayesCub}{BayesCub/guassianDiagnostics}
 
 \blogpost{Historical Highlights for Quasi-Monte Carlo}{Fred Hickernell}{history}{History/History}
 
