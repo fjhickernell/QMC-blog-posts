@@ -35,7 +35,15 @@ Bayesian cubature proceeds by increasing $n$ until $\text{err}_{\text{CI}}$ is n
 The computation of $\text{err}_{\text{CI}}$ for a single $\mX$ and $\vtheta$ requires  inversion of the matrix $ C_{\vtheta}(\mX,\mX)$, which typically costs $\Order(n^3)$.  Moreover, using a Bayesian credible interval as a stopping criterion, assumes that the integrand is not an outlier with respect to this Gaussian process.  To improve the chances that this is the case, the hyperparameters $m$, $s$, and $\vtheta$ should be tuned with respect to the function data.  The standard approaches require optimization, each of step of which involves an eigen-decomposition of $ C_{\vtheta}(\mX,\mX)$.
 
 \subsection*{Fast Bayesian Cubature}
-The way to overcome 
+The way to overcome this computational burden is use families of covariance kernels, $C_\vtheta$ that match the design $\mX$ in a way that the eigenvectors and eigenvalues of the matrix $C_{\vtheta}(\mX,\mX)$ can be obtained via fast transforms.  For integration lattices (see ???) and $C_\vtheta$ such as 
+\begin{equation}
+	???
+\end{equation}
+the fast transform corresponds to a fast Fourier transform \cite{RatHic19a,??}.  For digital nets (see our blog) and $C_\vtheta$ that are digitally-shfit invariant, the fast transform corresponds to a fast Walsh transform \cite{Jag19a,???}.  In both cases, the computational burden attributable to tuning the hyperparameters and computing the width of the credible interval is a reasonable $\Order(n \log(n))$.
+
+<Insert an example>
+
+
 \iffalse 
 
 
