@@ -6,6 +6,7 @@ The question of when enough samples have been taken to satisfy the specified err
 
 Traditionally, Bayesian credible intervals take $\Order(n^3)$ operations to construct, where $n$ is the sample size.  In contrast, computing $\hmu$ requires only $\Order(n)$ operations.  Fortuitously, there is a way to reduce the computational cost of constructing the Bayesian credible interval to $\Order(n \log (n))$ when using lattice or digital net low discrepancy samples. These Bayesian stopping criteria are implemented as \code{CubBayesLatticeG} and \code{CubBayesNetG}. This blog explains the key points.
 
+\subsection*{The Bayesian Approach}
 The Bayesian approach to approximating integrals assumes that the integrand, $f:[0,1]^d \to \reals$, is drawn from a Gaussian stochastic process parameterized by a (constant) mean and a covariance function defined by scale and shape parameters.  This is denoted $f \sim \mathcal{GP}(m,s^2 C_{\vtheta})$, and means that 
 \[
 \Ex[f(\vx)] = m, \quad \cov\bigl(f(\vt),f(\vx) \bigr) = \Ex[(f(\vt) - m)(f(\vx) - m)] = s^2 C_{\vtheta}(\vt,\vx), \qquad \forall \vt, \vx \in [0,1]^d.
@@ -15,8 +16,27 @@ $
 \Prob_f  [\abs{ \mu - \hmu_n} \le \varepsilon ] \ge 99\%.
 $
 
+The Bayesian credible interval, which depends on the sampling nodes, and the parameters defining the Gaussian process is \cite{RatHic19a}
+\begin{equation*}
+ \mathbb{P}_f \left[
+|\mu-\hmu| \leq \text{err}_\CI
+\right] = 99\%, \qquad
+{\text{err}_{\text{CI}}} := 2.58 \; s \; \sqrt{c_{0,{\vtheta}} - {\vc_{\vtheta}(\mX)}^T C_{\vtheta}(\mX,\mX)^{-1}\vc_{\vtheta}(\mX)}
+\end{equation*}
+assuming that $m = 0$. The formulae for the general $m$ case look similar. Here,
+\begin{gather*}
+\label{eqn:fGaussDist_c0}
+	\mX = ({\vx}_1, \ldots, {\vx}_n)^T, \qquad c_{0,{\vtheta}} := \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta} (\vx,\vt) \, \dif{\vx} \, \dif{\vt}, \\
+ \vc_{\vtheta}(\mX) := \left(  \int_{[0,1]^d} C_{\vtheta} (\vt,\vx_i) \, \dif{\vt} \right)_{i=1}^n, \qquad C_{\vtheta}(\mX,\mX) = \left(  C_{\vtheta}({\vx}_i,{\vx}_j)  \right)_{i,j=1}^n,
+	\end{gather*}
+and $2.58$ represents $99.5\%$ quantile.  The formula for $\hmu$ in terms of the function values at the nodes.
+Bayesian cubature proceeds by increasing $n$ until $\text{err}_{\text{CI}}$ is no greater than the error tolerance.  
 
+The computation of $\text{err}_{\text{CI}}$ for a single $\mX$ and $\vtheta$ requires  inversion of the matrix $ C_{\vtheta}(\mX,\mX)$, which typically costs $\Order(n^3)$.  Moreover, using a Bayesian credible interval as a stopping criterion, assumes that the integrand is not an outlier with respect to this Gaussian process.  To improve the chances that this is the case, the hyperparameters $m$, $s$, and $\vtheta$ should be tuned with respect to the function data.  The standard approaches require optimization, each of step of which involves an eigen-decomposition of $ C_{\vtheta}(\mX,\mX)$.
 
+\subsection*{Fast Bayesian Cubature}
+The way to overcome 
+\iffalse 
 
 
 
@@ -42,20 +62,17 @@ Automatic Bayesian cubature, $\hmu: L^1[0,1]^d \times (0,\infty) \to \reals$, ap
 \]
 
 As shown in \cite{RatHic19a}, a credible interval for the integral is given in terms of the nodes, $\{\vx_i\}_{i=1}^n$, and the covariance kernel, $C_{\vtheta}$,  by 
-\begin{subequations} \label{eqn_prob_confidence_interval}
-\begin{gather}
-\mathbb{P}_f \left[
+%\begin{subequations} \label{eqn_prob_confidence_interval}
+\begin{equation*}
+ \mathbb{P}_f \left[
 |\mu-\hmu| \leq \text{err}_\CI
-\right] = 99\%, \\
-{\text{err}_{\text{CI}}} = 2.58 \; s \; \sqrt{c_{0,{\vtheta}} - {\vc_{\vtheta}}^T \mC_{\vtheta}^{-1}\vc_{\vtheta}}
-\end{gather}
-\end{subequations}
+\right] = 99\%, \qquad
+{\text{err}_{\text{CI}}} := 2.58 \; s \; \sqrt{c_{0,{\vtheta}} - {\vc_{\vtheta}}^T \mC_{\vtheta}^{-1}\vc_{\vtheta}}
+\end{equation*}
 where
-\begin{subequations} \label{eqn:fGaussDist}
-\begin{gather}
+\begin{gather*}
 \label{eqn:fGaussDist_c0}
-	c_{0,{\vtheta}} := \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta} (\vx,\vt) \, \dif{\vx} \, \dif{\vt}, \\
-	\label{eqn:fGaussDist_vc}
+	c_{0,{\vtheta}} := \int_{[0,1]^{d} \times [0,1]^{d}} C_{\vtheta} (\vx,\vt) \, \dif{\vx} \, \dif{\vt}, \qquad
  \vc_{\vtheta} := \left(  \int_{[0,1]^d} C_{\vtheta} (\vt,\vx_i) \, \dif{\vt} \right)_{i=1}^n.
 	\end{gather}
 \end{subequations}
@@ -180,7 +197,7 @@ As $n$ increases, one expects $c_{0,\vtheta} - {\vc_\vtheta}^T{\mC_\vtheta}^{-1}
 But these computations are Ill-conditioned and numerical cost of vector-matrix calculations is $O (n^3)$. This motivates us to pursue the techniques to pursue \emph{Fast Bayesian Transforms} which helps with these problems.
 
 
-
+\fi
 
 
 
