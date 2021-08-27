@@ -1,22 +1,30 @@
-The blog Why Add Q to MC \ref{whyq} explained the advantages of carefully chosen, low discrepancy sampling sites for approximating multivariate integrals, or equivalently, expectations of functions of multivariate random variables.  The question of when enough samples have been taken to satisfy the specified error tolerance is an important one.  Stopping criteria based on Bayesian credible intervals are one good way of answering this question.
+The blog Why Add Q to MC \ref{whyq} explained the advantages of carefully chosen, low discrepancy sampling sites for approximating multivariate integrals, or equivalently, expectations of functions of multivariate random variables
+\[
+\mu:  = \int_{[0,1]^d} f(\vx) \, \dif \vx = \Ex[f(\vX)], \quad \text{where } \vX \sim \cu[0,1]^d, \qquad \mu \approx \hmu_n : = \frac 1n \sum_{i=1}^n f(\vx_i).
+\]
+The question of when enough samples have been taken to satisfy the specified error criterion, $\abs{\mu - \hmu_n} \le \varepsilon$, is an important one.  Stopping criteria based on Bayesian credible intervals are one good way of answering this question.
 
-Traditionally, Bayesian credible intervals take $\Order(n^3)$ operations to construct, where $n$ is the sample size.  In contrast, the approximate integral or expectation, is a simple sample mean requiring only $\Order(n)$ operations.  Fortuitously, there is a way to reduce the computational cost of constructing the Bayesian credible interval to $\Order(n \log (n))$, which makes it practical.  This blog highlights the key points.
+Traditionally, Bayesian credible intervals take $\Order(n^3)$ operations to construct, where $n$ is the sample size.  In contrast, computing $\hmu$ requires only $\Order(n)$ operations.  Fortuitously, there is a way to reduce the computational cost of constructing the Bayesian credible interval to $\Order(n \log (n))$ when using lattice or digital net low discrepancy samples. These Bayesian stopping criteria are implemented as \code{CubBayesLatticeG} and \code{CubBayesNetG}. This blog explains the key points.
 
-y this is an good alternative with minimal assumptions without compromising the accuracy.
-
-Alternatively, One can simply keep increasing the number of sample points.
-For high dimensional problems, it is difficult to adaptively change the sampling pattern. But we can automatically determine the sample size, $n$, given a fixed and reasonable sampling pattern. We take this approach using a Bayesian perspective.
-
-Assume a Gaussian process parameterized by a constant mean and a covariance function defined by a scale parameter and a function specifying how the integrand values at two different points in the domain are related.
-These parameters are estimated from integrand values or are given non-informative priors. This leads to a credible interval for the integral. The sample size, $n$, is chosen to make the credible interval for the Bayesian posterior error no greater than the desired error tolerance. 
-
-% However, the process just outlined typically requires vector-matrix operations  with a computational cost of $O(n^3)$. Our innovation is to pair low discrepancy nodes with matching kernels, which lowers the computational cost to $O(n \log n)$. 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The Bayesian approach to approximating integrals assumes that the integrand, $f:[0,1]^d \to \reals$, is drawn from a Gaussian stochastic process parameterized by a (constant) mean and a covariance function defined by scale and shape parameters.  This is denoted $f \sim \mathcal{GP}(m,s^2 C_{\vtheta})$, and means that 
+\[
+\Ex[f(\vx)] = m, \quad \cov\bigl(f(\vt),f(\vx) \bigr) = \Ex[(f(\vt) - m)(f(\vx) - m)] = s^2 C_{\vtheta}(\vt,\vx), \qquad \forall \vt, \vx \in [0,1]^d.
+\]
+Here, $m$, $s$, and $C_\vtheta$, must be specified and/or estimated.  Furthermore, the multivariate integral, $\mu$, has a Gaussian distribution.  Automatic Bayesian cubature uses these assumptions to increase $n$ until we reach
+$
+\Prob_f  [\abs{ \mu - \hmu_n} \le \varepsilon ] \ge 99\%.
+$
 
 
-\code{CubBayesLatticeG} and \code{CubBayesNetG} are the two stopping criterion algorithms that uses Bayesian approach.  These algorithms are guaranteed for integrands belonging to cone of functions which reside in the middle of the sample space defined by Gaussian process parameters. 
+
+
+
+
+
+
+
+
+
 
 % First, we briefly introduce the necessary background. 
 Assume the integrand, $f$, is an instance of a stochastic Gaussian process, i.e., $f \sim \mathcal{GP}(m,s^2 C_{\vtheta})$.  Specifically, $f$ is a real-valued random function with constant mean $m$ and covariance function $s^2C_{\vtheta}$, where $s$ is a positive scale factor, and $C_{\vtheta}: [0,1]^d \times [0,1]^d \to \mathbb{R} $ is a symmetric, positive-definite function and, parameterized by $\vtheta$:
