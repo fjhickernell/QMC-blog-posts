@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
+\usepackage{booktabs} 
 \title{Highly Efficient Geometric Brownian Motion Modeling with QMCPy}
 \author{Larysa Matiukha and Sou-Cheng Choi}
 \date{\today}
@@ -48,7 +49,7 @@ gbm = qp.GeometricBrownianMotion(qp.Lattice(2))
 gbm.gen_samples(n=4) # generates four 2-dimensional samples
 \end{verbatim}
 
-Let's validate the  theoretical properties by generating a large number of GBM samples and comparing the empirical moments with the theoretical values. Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point.
+Let's validate the  theoretical properties by generating a large number of GBM samples and comparing the empirical moments with the theoretical values. Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The results are reported in Table~\ref{tab1}.
 
 \begin{verbatim}
 # Generate GBM samples for theoretical validation
@@ -64,10 +65,41 @@ theo_mean = S0 * np.exp(mu * T)
 theo_var = S0**2 * np.exp(2*mu*T) * (np.exp(sigma**2 * T) - 1)
 qp_emp_mean = np.mean(S_T)
 qp_emp_var = np.var(S_T, ddof=1) 
-print(f"Mean: {qp_emp_mean:.3f} (theoretical: {theo_mean:.3f})")
-print(f"Variance: {qp_emp_var:.3f} (theoretical: {theo_var:.3f})")
-qp_gbm
 \end{verbatim}
+
+\begin{table}[t]
+\centering
+\caption{Theoretical vs Empirical Validation of GBM Properties}
+\begin{tabular}{ll}
+\hline
+\textbf{Statistic} & \textbf{Value} \\
+\hline
+Sample Mean & 105.134 (Theoretical: 105.127) \\
+Sample Variance & 453.062 (Theoretical: 451.029) \\
+\hline
+Time Vector & [0.2,\; 0.4,\; 0.6,\; 0.8,\; 1.0] \\
+Drift ($\mu$) & 0.05 \\
+Diffusion ($\sigma$) & 0.20\\
+Mean  & [101.005,\; 102.020,\; 103.045,\; 104.081,\; 105.127] \\
+Decomposition Type & PCA \\
+\hline
+\multicolumn{2}{l}{\textbf{Covariance Matrix:}} \\
+\multicolumn{2}{l}{
+\(
+\begin{bmatrix}
+81.943 & 82.767 & 83.599 & 84.439 & 85.288 \\
+82.767 & 167.869 & 169.556 & 171.260 & 172.981 \\
+83.599 & 169.556 & 257.923 & 260.516 & 263.134 \\
+84.439 & 171.260 & 260.516 & 352.258 & 355.798 \\
+85.288 & 172.981 & 263.134 & 355.798 & 451.029
+\end{bmatrix}
+\)
+} \\
+\hline
+\end{tabular}
+\label{tab1}
+\end{table}
+
 
 \section{GMB vs Brownian Motion}
 
@@ -115,7 +147,7 @@ plot_paths('BM', sampler, t_final=1, initial_value=1, drift=0, diffusion=1, n=n)
 plot_paths('GBM', sampler, t_final=1, initial_value=1, drift=0, diffusion=1, n=n)
 \end{verbatim}
 
-\begin{figure}[h!]
+\begin{figure}[t!]
 \centering
 \includegraphics[width=0.49\textwidth]{images/figure_1.png}
 \includegraphics[width=0.49\textwidth]{images/figure_2.png}\\
@@ -145,7 +177,7 @@ gbm_lattice = plot_paths('GBM', qp.Lattice(2**8), t_final=5,
 
 \section{QuantLib vs QMCPy Comparison}
 
-In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance.
+In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. The numerical results are summarized in Table~\ref{tab2}.
 
 
 \begin{verbatim}
@@ -175,11 +207,26 @@ quantlib_paths, quantlib_time = generate_quantlib_paths(**params)
 \end{verbatim}
 
 
-\begin{figure}[h!]
+\begin{figure}[t!]
 \centering
 \includegraphics[width=1\textwidth]{images/figure_5.png}
 \caption{QMCPy vs QuantLib: Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.}
 \end{figure}
+
+\begin{table}[t]
+\centering
+\caption{QuantLib vs QMCPy: QMCPy is 3 times faster than QuantLib in generating thousands of paths.}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{Mean} & \textbf{Std. Dev.} & \textbf{Time (s)}   \\
+\midrule
+QuantLib & 105.10 & 21.11 & 0.817  \\
+QMCPy & 105.13 & 21.25 & 0.270  \\
+Theoretical & 105.13 & 21.24 & ---  \\
+\bottomrule
+\end{tabular}
+\label{tab2}
+\end{table}
 
 \section{Internals}
 
