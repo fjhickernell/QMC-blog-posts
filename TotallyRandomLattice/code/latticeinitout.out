@@ -1,0 +1,12 @@
+Lattice (DiscreteDistribution Object)
+    d               2^(1)
+    dvec            [0 1]
+    randomize       1
+    order           natural
+    gen_vec         [     1 249531]
+    entropy         120
+    spawn_key       ()
+[[0.34548142 0.46736834]
+ [0.84548142 0.96736834]
+ [0.59548142 0.21736834]
+ [0.09548142 0.71736834]]

@@ -1,0 +1,26 @@
+Solution: 3.998147791818197
+Data: 
+MeanVarDataVec (AccumulateData Object)
+    solution        3.998
+    comb_bound_low  3.977
+    comb_bound_high 4.019
+    comb_flags      1
+    n_total         2^(26)
+    n               [67108864. 67108864. 67108864.]
+    time_integrate  152.068
+CubMCCLTVec (StoppingCriterion Object)
+    inflate         1.200
+    alpha           0.010
+    abs_tol         0.025
+    rel_tol         0
+    n_init          2^(8)
+    n_max           2^(30)
+CovIntegrand (Integrand Object)
+Gaussian (TrueMeasure Object)
+    mean            1
+    covariance      1
+    decomp_type     PCA
+IIDStdUniform (DiscreteDistribution Object)
+    d               2^(2)
+    entropy         7
+    spawn_key       ()

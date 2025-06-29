@@ -1,0 +1,44 @@
+\setcounter{lstlisting}{0}
+\setlength{\parindent}{0pt}
+\FredComment{There is a lot of code in this blog.  There should be a mathematical description of the examples that you are solving.}
+
+\renewcommand{\lstlistingname}{Example}
+\noindent Recent work by Aleksei G. Sorokin and Jagadeeswaran Rathinavel \cite{SorJag23} discuss extending stopping criterion for a scalar mean to stopping criterion for vector quantities of interest formulated as functions of multiple means. One such scalar Stopping Criterion is CubMCCLT that calculates a confidence interval for \(\mu\) by using the Central Limit Theorem. When ${\{x_i\}}_{i=1}^{n}$ are IID and \(f\) has a finite variance, the confidence interval for \(\mu\) can be calculated as:
+\begin{equation*}
+    \mu^{\pm} = \hat{\mu}\; \pm\; CZ_{{\alpha ^ {(\mu)}/2}} \hat{\sigma}/\sqrt{n}
+\end{equation*}
+Here, $\hat{\mu}$ is the sample average of function evaluations, $Z_{{\alpha ^ {(\mu)}/2}}$ is the inverse CDF of a standard normal distribution at $1 - {\alpha ^ {(\mu)}/2}$, the variance of \(f(X)\) can be approximated by $\hat{\sigma}^2 = \frac{1}{{n-1}} \sum_{i=1}^{n} (f(\bm{x}_i) - \hat{\mu})^2 $, and $C^2$ is an inflation factor greater than 1 for a more conservative estimate.
+
+
+\vspace{\baselineskip}  Building on the CubMCCLT algorithm, we have developed a vectorized version of it known as CubMCCLTVec.
+
+\subsection*{What does the CubMCCLTVec Class Do?}
+The CubMCCLTVec class, which is a Stopping Criterion Object, calculates a confidence interval for functions with multiple outputs based on the user-specified confidence level (default is 99\%). Given an initial and maximum sample size and an absolute tolerance, we keep on doubling the sample size and recomputing the confidence interval until half the confidence interval width is less than the absolute tolerance or the double of the current sample size exceeds the maximum sample size.
+
+
+\vspace{\baselineskip}  Like the other Stopping Criterion Objects, CubMCCLTVec too utilizes an Accumulate Data Object to recompute the confidence interval known as MeanVarDataVec.
+\subsection*{Some Examples Utilizing the CubMCCLTVec Class:}
+The following code illustrates three examples that are being solved using CubMCCLTVec:
+\begin{enumerate}
+    \item Covariance \cite{qmcsoftware_notebook}: $T \sim \mathcal{N}(1,I_d)$ and the covariance of $P = T_0\cdots T_{d-1}$ and $S = T_0+\dots+T_{d-1}$ is:
+$$\mathrm{Cov}[P,S] = \mathbb{E}[PS]-\mathbb{E}[P]\mathbb{E}[S] = \mu_0-\mu_1\mu_2$$
+Theoretically, $\mathrm{Cov}[P,S] = 2d-(1)(d) = d$
+    \item Box Integral \cite{BAILEY2007196}: $B_s(x) = (\sum_{j=1}^{d} x^2_j)^{s/2}$ where $x_1,\dots,x_d \sim \mathcal{U}[0,1]$ and the box integral is computed for $s=-1$ and $s=1$ (the two outputs).
+    \item Custom Fun: $x_j \sim \mathcal{U}[0,2j]$ for $j=1,\dots6$
+\end{enumerate}
+\lstinputlisting[style = Python]{CubMCCLTVec/code/examples.py}
+    \begin{minipage}{.45\textwidth}
+        \lstinputlisting[caption = Covariance , frame=tlrb]{CubMCCLTVec/code/example_1.txt}
+    \end{minipage}\hfill
+    \begin{minipage}{.45\textwidth}
+        \lstinputlisting[caption= Box Integral, frame=tlrb]{CubMCCLTVec/code/example_2.txt}
+    \end{minipage}\hfill
+    \begin{minipage}{.6\textwidth}
+        \lstinputlisting[caption= Custom Fun , frame=tlrb]{CubMCCLTVec/code/example_3.txt}
+    \end{minipage}
+
+\subsection*{Benefits of developing the CubMCCLTVec Class:}
+This class gives us a new and different option to find when the user-specified error tolerance has been satisfied and its generalization to functions with multiple outputs allows us to utilize the existing CubMCCLT algorithm and extend it to such functions.
+
+
+

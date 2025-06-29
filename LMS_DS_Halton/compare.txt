@@ -1,0 +1,5 @@
+Time to generate samples for QRNG= 0.355226993560791
+Time to generate samples for OWEN= 2.15480637550354
+Time to generate samples for LMS= 1.348050832748413
+Time to generate samples for DS= 1.0668678283691406
+Time to generate samples for LMS_DS= 2.5354738235473633

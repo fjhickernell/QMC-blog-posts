@@ -1,0 +1,31 @@
+Integration data from the default lattice generator:
+LDTransformData (AccumulateData Object)
+    solution        1.135
+    comb_bound_low  1.134
+    comb_bound_high 1.135
+    comb_flags      1
+    n_total         2^(17)
+    n               2^(17)
+    time_integrate  0.626
+CubQMCLatticeG (StoppingCriterion Object)
+    abs_tol         0.001
+    rel_tol         0
+    n_init          2^(10)
+    n_max           2^(35)
+Keister (Integrand Object)
+Gaussian (TrueMeasure Object)
+    mean            0
+    covariance      2^(-1)
+    decomp_type     PCA
+    transform       Gaussian (TrueMeasure Object)
+                       mean            0
+                       covariance      2^(-1)
+                       decomp_type     PCA
+Lattice (DiscreteDistribution Object)
+    d               5
+    dvec            [0 1 2 3 4]
+    randomize       1
+    order           natural
+    gen_vec         [     1 182667 469891 498753 110745]
+    entropy         230872234427376376523997454058047592711
+    spawn_key       ()

@@ -1,0 +1,40 @@
+__init__(dimension=1, randomize=True, order='natural', seed=None, generating_vector='lattice_vec.3600.20.npy', d_max=None, m_max=None) method of qmcpy.discrete_distribution.lattice.lattice.Lattice instance
+    Args:
+        dimension (int or ndarray): dimension of the generator.
+            If an int is passed in, use sequence dimensions [0,...,dimensions-1].
+            If a ndarray is passed in, use these dimension indices in the sequence.
+        randomize (bool): If True, apply shift to generated samples.
+            Note: Non-randomized lattice sequence includes the origin.
+        order (str): 'linear', 'natural', or 'mps' ordering.
+        seed (None or int or numpy.random.SeedSeq): seed the random number generator for reproducibility
+        generating_vector (ndarray, str or int): generating matrix or path to generating matrices.
+            ndarray should have shape (d_max).
+            a string generating_vector should be formatted like
+            'lattice_vec.3600.20.npy' where 'name.d_max.m_max.npy'
+            an integer should be larger than 1
+        d_max (int): maximum dimension
+        m_max (int): 2^m_max is the max number of supported samples
+    
+    Note:
+        d_max and m_max are required if generating_vector is a ndarray.
+        If generating_vector is an string (path), d_max and m_max can be taken from the file name if None
+
+
+gen_samples(n=None, n_min=0, n_max=8, warn=True, return_unrandomized=False) method of qmcpy.discrete_distribution.lattice.lattice.Lattice instance
+    Generate lattice samples
+    
+    Args:
+        n (int): if n is supplied, generate from n_min=0 to n_max=n samples.
+            Otherwise use the n_min and n_max explicitly supplied as the following 2 arguments
+        n_min (int): Starting index of sequence.
+        n_max (int): Final index of sequence.
+        return_unrandomized (bool): return samples without randomization as 2nd return value.
+            Will not be returned if randomize=False.
+    
+    Returns:
+        ndarray: (n_max-n_min) x d (dimension) array of samples
+    
+    Note:
+        Lattice generates in blocks from 2**m to 2**(m+1) so generating
+        n_min=3 to n_max=9 requires necessarily produces samples from n_min=2 to n_max=16
+        and automatically subsets. May be inefficient for non-powers-of-2 samples sizes.
