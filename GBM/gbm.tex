@@ -210,7 +210,7 @@ quantlib_paths, quantlib_time = generate_quantlib_paths(**params)
 \begin{figure}[t!]
 \centering
 \includegraphics[width=1\textwidth]{images/figure_5.png}
-\caption{QMCPy vs QuantLib: Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.}
+\caption{QMCPy vs QuantLib}
 \end{figure}
 
 \begin{table}[t]
@@ -228,40 +228,67 @@ Theoretical & 105.13 & 21.24 & ---  \\
 \label{tab2}
 \end{table}
 
+Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
+
+
 \section{Internals}
 
 The \texttt{GeometricBrownianMotion} class in QMCPy is engineered for speed, robustness, and mathematical correctness. Its design leverages object-oriented inheritance and vectorized operations, resulting in both flexibility and high performance.
 \texttt{GeometricBrownianMotion} inherits from \texttt{BrownianMotion} which itself inherits from \texttt{Gaussian}. This layered design allows the GBM class to reuse and extend efficient implementations for Gaussian random vectors and Brownian motion increments.
-The constructosr rigorously check input parameters (e.g., positivity of initial value and diffusion, valid decomposition type), ensuring mathematical integrity and preventing runtime errors.
-
+The constructor rigorously checks input parameters (e.g., positivity of initial value and diffusion, valid decomposition type), ensuring mathematical integrity and preventing runtime errors.
 
 The class uses vectorized NumPy operations to generate entire arrays of GBM paths in a single call, minimizing Python loops and maximizing computational throughput. Sample generation proceeds in two stages:
 \begin{enumerate}
 \item 
-The parent class generates Brownian motion increments using the specified sampler (e.g., low-discrepancy lattice, IID uniform), with drift and diffusion handled in the mean and covariance structure.
-\item  The GBM class transforms these increments via the exponential mapping    \eqref{gbm}, performed in a fully vectorized fashion, ensuring that thousands of paths can be simulated in milliseconds.
+The parent class \texttt{BrownianMotion} generates standard Brownian motion sample paths using the specified sampler (e.g., low-discrepancy lattice, IID uniform), with drift and diffusion handled in the mean and covariance structure.
+\item  The GBM class transforms the BM samples via the exponential mapping    \eqref{gbm}, performed in a fully vectorized fashion, ensuring that thousands of paths can be efficiently simulated.
 \end{enumerate}
-The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging NumPy’s broadcasting for efficient computation.
+The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging \href{https://numpy.org/devdocs/user/basics.broadcasting.html}{NumPy’s broadcasting} for efficient computations. (Briefly, broadcasting in NumPy allows arithmetic operations between arrays of different shapes by automatically expanding the smaller array to match the shape of the larger array.)
+
+ The Gaussian‐ and Brownian‐motion classes both implement both Cholesky and PCA factorization of the covariance matrix
+\[
+\Sigma \;=\; L\,L^{\!\top}
+\quad\text{and}\quad
+\Sigma \;=\; P\,D\,P^{\!\top},
+\]
+respectively.  In the Cholesky method one computes the lower‐triangular $L=\operatorname{chol}(\Sigma)$ and obtains correlated increments via $X=L\,Z$, where $Z\sim\mathcal{N}(0,I)$.  In the PCA approach, one first diagonalizes $\Sigma=PDP^{\!\top}$, then forms $X = P\,D^{1/2}\,Z$.  By default PCA is used for its superior numerical stability in high dimensions and slightly lower cost when many eigenvalues are near zero.  These correlated normals feed directly into the GBM update
+\[
+S(t+\Delta t) \;=\; S(t)\,\exp\!\Bigl((\mu - \tfrac12\sigma^2)\Delta t \;+\;\sigma\sqrt{\Delta t}\,X\Bigr),
+\]
+ensuring that the simulated paths respect the intended covariance structure and remain strictly positive (with strict‐positivity checks raising warnings or errors if violated).
 
 
-The underlying Gaussian and Brownian motion classes support both Principal Component Analysis (PCA) and Cholesky decomposition for generating correlated increments. PCA is the default, offering better numerical stability and performance for high-dimensional simulations.
+The internal \texttt{\_spawn} method allows one to clone a GBM model—reusing precomputed factorization and parameters—while swapping in a new sampler or changing the dimensionality.  For example, suppose you want to compare IID sampling against a Sobol low‐discrepancy sequence without re‐initializing the covariance factorization each time. 
+Because \texttt{\_spawn} avoids recomputing $L$ or the $P,D$ eigendecomposition, initialization time can be substantially reduced in large‐scale Monte Carlo experimentation with different sampling methods.
 
-After path generation, the class can validate that all generated GBM values are strictly positive, as required by the mathematical definition. Violations raise errors or warnings, depending on strictness settings.
-The \texttt{\_spawn} method allows for reproducible generation of new GBM instances with the same parameters but different samplers or dimensions, supporting advanced Monte Carlo workflows.  The design supports various samplers, including low-discrepancy sequences and IID random numbers, enabling both quasi-Monte Carlo and standard Monte Carlo simulations without code changes.
-\section*{References}
 
-\begin{enumerate}
-\item[{[1]}]  Paul Glasserman, P. (2003) *Monte Carlo Methods in Financial Engineering*. Springer, 2nd edition
-\item[{[2]}]  Choi, Sou-Cheng T.
-and Hickernell, Fred J.
-and Jagadeeswaran, Rathinavel
-and McCourt, Michael J.
-and Sorokin, Aleksei G. (2022) Quasi-Monte Carlo Software, In Alexander Keller, editor, *Monte Carlo and Quasi-Monte Carlo Methods* Springer International Publishing
-\item[{[3]}] S.-C. T. Choi and F. J. Hickernell and R. Jagadeeswaran and M. McCourt and A. Sorokin. (2023) QMCPy: A quasi-Monte Carlo Python Library (versions 1--1.6.2)
-\item[{[4]}]  Hull, J. C. (2017) *Options, Futures, and Other Derivatives*. Pearson, 10th edition
-\item[{[5]}]   Sheldon. Ross. (2014) *Introduction to Probability Models*. Academic Press, 11th edition
-\item[{[6]}]  QuantLib Development Team. QuantLib: A free/open-source library for quantitative finance, Version 1.38, https://www.quantlib.org
-\end{enumerate}
+\begin{thebibliography}{6}
+
+\bibitem[1]{glasserman2003}
+Glasserman, P. (2003). \textit{Monte Carlo Methods in Financial Engineering} (2nd ed.). Springer.
+
+\bibitem[2]{choi2022}
+Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2022).
+Quasi-Monte Carlo Software. In A. Keller (Ed.), \textit{Monte Carlo and Quasi-Monte Carlo Methods}.
+Springer International Publishing.
+
+\bibitem[3]{qmcpy2023}
+Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2023).
+QMCPy: A quasi-Monte Carlo Python Library (Versions 1–1.6.2).
+
+\bibitem[4]{hull2017}
+Hull, J. C. (2017). \textit{Options, Futures, and Other Derivatives} (10th ed.). Pearson.
+
+\bibitem[5]{ross2014}
+Ross, S. M. (2014). \textit{Introduction to Probability Models} (11th ed.). Academic Press.
+
+\bibitem[6]{quantlib}
+QuantLib Development Team. (n.d.). \textit{QuantLib: A free/open-source library for quantitative finance} (Version 1.38).
+Retrieved from \url{https://www.quantlib.org}
+
+\end{thebibliography}
+
+
  
 
 \end{document}
