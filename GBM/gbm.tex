@@ -181,13 +181,13 @@ In this section, we compare QMCPy's GeometricBrownianMotion implementation with 
 
 \begin{table}[t]
 \centering
-\caption{QuantLib vs QMCPy: QMCPy is most 4 times faster than QuantLib in generating thousands of paths.}
+\caption{QuantLib vs QMCPy: QMCPy is 3.4 times faster than QuantLib in generating thousands of paths.}
 \begin{tabular}{lccc}
 \toprule
 \textbf{Method} & \textbf{Mean} & \textbf{Std. Dev.} & \textbf{Time (s)}   \\
 \midrule
-QuantLib & 105.10 & 21.11 & 0.817  \\
-QMCPy & 105.13 & 21.25 & 0.270  \\
+QuantLib & 105.10 & 21.11 & 0.819  \\
+QMCPy & 105.13 & 21.25 & 0.239  \\
 Theoretical & 105.13 & 21.24 & ---  \\
 \bottomrule
 \end{tabular}
@@ -211,7 +211,7 @@ The parent class \texttt{BrownianMotion} generates standard Brownian motion samp
 \end{enumerate}
 The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging \href{https://numpy.org/devdocs/user/basics.broadcasting.html}{NumPy’s broadcasting} for efficient computations. (Briefly, broadcasting in NumPy allows arithmetic operations between arrays of different shapes by automatically expanding the smaller array to match the shape of the larger array.)
 
- The Gaussian‐ and Brownian‐motion classes both implement both Cholesky and PCA factorization of the covariance matrix
+ The Gaussian and Brownian‐motion classes both implement both Cholesky and PCA factorization of the covariance matrix
 \[
 \Sigma \;=\; L\,L^{\!\top}
 \quad\text{and}\quad
