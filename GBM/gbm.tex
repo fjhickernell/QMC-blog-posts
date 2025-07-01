@@ -42,7 +42,7 @@ where
 \begin{itemize}
 \item $S_0$ is the initial value, 
 \item $\mu$ is a drift coefficient
-\item $\sigma$ is difussion coefficient  
+\item $\sigma$ is a diffusion coefficient  
 \item $W_t$ is a (standard) Brownian motion.
 \end{itemize}
 
@@ -55,11 +55,11 @@ At any time $t > 0$, $S_t$ follows a log-normal distribution with expected value
     \text{Cov}(S(t_i), S(t_j)) = S_0^2 e^{\mu(t_i + t_j)} \left(e^{\sigma^2 \min(t_i, t_j)} - 1\right).$
 \end{itemize}
 
-GBM is commonly used to model stock prices and options payoffs. 
+GBM is commonly used to model stock prices driving option payoffs. 
 
 \section{GBM object in QMCPy}
 
-BBM in QMCPy inherits from BrownianMotion class $[2, 3]$. 
+GBM in QMCPy inherits from BrownianMotion class $[2, 3]$. 
 We can create a simple GBM instance and generate sample paths to see the class in action:
 
 \lstinputlisting[
