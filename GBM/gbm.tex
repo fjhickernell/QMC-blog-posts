@@ -8,9 +8,16 @@
 \usepackage{mathtools}
 \usepackage{microtype}
 \usepackage{siunitx}
+\sisetup{
+    round-mode = places,
+    round-precision = 3,
+    output-decimal-marker = .
+}
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{verbatim}
+\usepackage{enumitem} % Added for itemize spacing control
+\usepackage[most]{tcolorbox}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue]{hyperref}
 
 \lstdefinestyle{Python}{
@@ -35,6 +42,24 @@
 
 \begin{document}
 \maketitle
+
+\begin{tcolorbox}[title=Quick Start,colback=blue!1,colframe=blue!30!black,breakable]
+Install the required Python packages:
+%
+\begin{lstlisting}[language=bash,basicstyle=\ttfamily,frame=none,numbers=none]
+    pip install qmcpy numpy matplotlib
+\end{lstlisting}
+
+Minimal example to simulate 16 geometric Brownian motion paths over $\lbrack 0,1\rbrack$ with QMCPy's lattice sampler ($S_0=1$, $\mu=0.05$, $\sigma^2=0.2$) and plots five of them:
+%
+\lstinputlisting[
+    style=Python,
+    frame=none,
+    numbers=none,
+    label={lst:quickstart}
+]{code/quickstart.py}
+\end{tcolorbox}
+
 
 \section{Introduction}
 
@@ -73,19 +98,23 @@ We can create a simple GBM instance and generate sample paths to see the class i
 
 \lstinputlisting[
     style=Python,
-    caption={Generating 4 samples from a 2-D GBM using QMCPy.},
+    caption={Generating 4 GBM sample paths evaluated at 2 time points using QMCPy.},
     label={lst:gbm_qmcpy2}
 ]{code/gbm_qmcpy.py}
 
-The output shows 4-sample paths from a 2-dimensional GBM:
-\begin{verbatim}
-array([[0.60712598, 1.63922882],
-       [0.52555107, 0.29133149],
-       [3.84628308, 4.03575649],
-       [0.62311813, 0.65946838]])
-\end{verbatim}
+The output shows 4 sample paths evaluated at 2 time points, yielding a $(4 \times 2)$ array where rows represent paths and columns represent time steps:
+\[
+\left[
+\begin{array}{@{} S[table-format=1.3] S[table-format=1.3] @{}}
+\num{0.60712598} & \num{1.63922882} \\
+\num{0.52555107} & \num{0.29133149} \\
+\num{3.84628308} & \num{4.03575649} \\
+\num{0.62311813} & \num{0.65946838}
+\end{array}
+\right].
+\]
 
-Let's validate the theoretical properties by generating a large number of GBM samples and comparing the empirical moments with the theoretical values. Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The code in Listing~\ref{lst:gbm-validation} computes these statistics. The results are reported in Table~\ref{tab1}.
+To validate theoretical properties, we generate $2^{12} = 4096$ paths over 5 time steps and compare empirical moments with theoretical values.  Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The results are shown in Table~\ref{tab1}.
 
 \lstinputlisting[
     style=Python,
@@ -138,8 +167,6 @@ Paths of the driftless BM should fluctuate symmetrically around the initial valu
 
 Next, we demonstrate how easily one can swap samplers or change parameters in QMCPy.  For example, to model a stock price
 with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$ over a 5‐year horizon using IID sampling; see Listing~\ref{lst:gbm_iid_32}.
-
-\medskip
 
 \lstinputlisting[
     style=Python,
@@ -240,6 +267,7 @@ Theoretical & 105.13 & 21.24 & ---  \\
 \label{fig:qmcpy_quantlib_comparison}
 \end{figure}
 
+
 \section{Internals}
 
 The \texttt{GeometricBrownianMotion} class in QMCPy is engineered for speed, robustness, and mathematical correctness. Its design leverages object-oriented inheritance and vectorized operations, resulting in both flexibility and high performance.
@@ -265,6 +293,15 @@ respectively.  In the Cholesky method, one computes the lower‐triangular $L=\o
 S_{t+\Delta t} \;=\; S_t\,\exp\!\Bigl((\mu - \tfrac12\sigma^2)\Delta t \;+\;\sigma\sqrt{\Delta t}\,X\Bigr),
 \]
 ensuring that the simulated paths respect the intended covariance structure and remain strictly positive (with strict‐positivity checks raising warnings or errors if violated).
+
+\begin{tcolorbox}[title=Takeaways,colback=blue!1,colframe=blue!30!black]
+\begin{itemize}[topsep=0pt,itemsep=0pt,parsep=0pt,leftmargin=*]
+    \item Accuracy parity: QMCPy's GBM matches QuantLib's results and the theoretical moments (see Table~\ref{tab2}).
+    \item Speed: Vectorized operations typically deliver 2--4$\times$ faster path generation in QMCPy for thousands of paths.
+    \item Flexibility: Swap samplers (e.g., IID, lattice) or covariance decompositions (e.g., PCA, Cholesky) with a single argument change.
+\end{itemize}
+\end{tcolorbox}
+
 
 \begin{thebibliography}{6}
 
