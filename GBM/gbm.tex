@@ -10,6 +10,7 @@
 \usepackage{siunitx}
 \usepackage{float}
 \usepackage{subcaption}
+\usepackage{verbatim}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue]{hyperref}
 
 \lstdefinestyle{Python}{
@@ -135,16 +136,16 @@ Paths of the driftless BM should fluctuate symmetrically around the initial valu
     label={lst:gbm_qmcpy3}
 ]{code/bm_gbm_16.py}
 
-
 Next, we demonstrate how easily one can swap samplers or change parameters in QMCPy.  For example, to model a stock price
 with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$ over a 5‐year horizon using IID sampling; see Listing~\ref{lst:gbm_iid_32}.
+
+\medskip
 
 \lstinputlisting[
     style=Python,
     caption={Generate 32 GBM sample paths with IID sampling.},
     label={lst:gbm_iid_32}
 ]{code/gbm_iid_32.py}
-
 
 Or, to use a low‐discrepancy lattice sampler with the same parameters (Listing~\ref{lst:gbm_lattice_32}):
 \lstinputlisting[
@@ -153,8 +154,8 @@ Or, to use a low‐discrepancy lattice sampler with the same parameters (Listing
     label={lst:gbm_lattice_32}
 ]{code/gbm_lattice_32.py}
 
-
-Now, let's define a utility function that will help us visualize BM or GBM paths with different samplers and parameters (Listing~\ref{lst:plot-paths}). The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplots~(\subref{fig:bm_iid}), (\subref{fig:gbm_iid}), (\subref{fig:bm_lattice}), and (\subref{fig:gbm_lattice}) show, respectively: 
+%Now, let's define a utility function that will help us visualize BM or GBM paths with different samplers and parameters (Listing~\ref{lst:plot-paths}). 
+The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplots~(\subref{fig:bm_iid}), (\subref{fig:gbm_iid}), (\subref{fig:bm_lattice}), and (\subref{fig:gbm_lattice}) show, respectively: 
 
 \begin{itemize}
     \item BM with lattice sampler ($T=1$, $S_0=1$, $\mu=0$, $\sigma^2=1$, 16 paths)
@@ -163,11 +164,13 @@ Now, let's define a utility function that will help us visualize BM or GBM paths
     \item GBM with lattice sampler ($T=5$, $S_0=50$, $\mu=0.1$, $\sigma^2=0.2$, 32 paths).
 \end{itemize}
 
+\begin{comment}
 \lstinputlisting[
     style=Python,
     caption={Function to plot BM and GBM sample paths.},
     label={lst:plot-paths}
 ]{code/plot_paths.py}
+\end{comment}
 
 \begin{figure}[tbp]
 \centering
@@ -198,26 +201,22 @@ Now, let's define a utility function that will help us visualize BM or GBM paths
 \label{fig:bm_gbm_paths}
 \end{figure}
 
-
 \section{QuantLib vs QMCPy Comparison}
 
-In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. We use Listing~\ref{lst:quantlib} to generate the QuantLib paths. The numerical results are summarized in Table~\ref{tab2}.
+In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
+The numerical results are summarized in Table~\ref{tab2}. 
+
+Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
+
+\begin{comment}
 \lstinputlisting[
     style=Python,
     caption={Function to generate GBM paths with QuantLib.},
     label={lst:quantlib}
 ]{code/quantlib.py}
+\end{comment}
 
-The covariance heatmap comparison is shown in Figure~\ref{fig:qmcpy_quantlib_comparison}.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=1\textwidth]{images/figure_5.png}
-\caption{QMCPy vs QuantLib comparison. The heatmap displays the covariance matrix with time 0 at the top of the y-axis, allowing direct visual comparison with the numerical values in the  matrix such as the one shown in Table~\ref{tab1}.}
-\label{fig:qmcpy_quantlib_comparison}
-\end{figure}
-
-\begin{table}[tbp]
+\begin{table}[btp]
 \centering
 \caption{QuantLib vs QMCPy: QMCPy is 1.8 times faster than QuantLib in generating thousands of paths.}
 \begin{tabular}{lccc}
@@ -232,8 +231,14 @@ Theoretical & 105.13 & 21.24 & ---  \\
 \label{tab2}
 \end{table}
 
-Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
+ In Figure~\ref{fig:qmcpy_quantlib_comparison}, the top row shows sample paths: QMCPy on the left and QuantLib on the right. The bottom-left panel overlays the marginal distribution at $t=1$ (e.g., histograms or KDEs), where both libraries yield nearly identical shapes with means and standard deviations matching Table~\ref{tab2}. The bottom-right panel is a QMCPy covariance heatmap with time 0 at the top of the $y$-axis; the variance increases along the diagonal with time and the off-diagonal structure follows $\min(t_i,t_j)$, consistent with the analytic form and the numerical matrix in Table~\ref{tab1}.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{images/figure_5.png}
+\caption{QMCPy vs QuantLib comparison. Top: sample paths from QMCPy (left) and QuantLib (right). Bottom left: marginal distribution at $t=1$ showing close agreement between libraries and with Table~\ref{tab2}. Bottom right: QMCPy covariance heatmap (time 0 at top), consistent with the numerical matrix in Table~\ref{tab1}.}
+\label{fig:qmcpy_quantlib_comparison}
+\end{figure}
 
 \section{Internals}
 
@@ -260,8 +265,6 @@ respectively.  In the Cholesky method, one computes the lower‐triangular $L=\o
 S_{t+\Delta t} \;=\; S_t\,\exp\!\Bigl((\mu - \tfrac12\sigma^2)\Delta t \;+\;\sigma\sqrt{\Delta t}\,X\Bigr),
 \]
 ensuring that the simulated paths respect the intended covariance structure and remain strictly positive (with strict‐positivity checks raising warnings or errors if violated).
-
-
 
 \begin{thebibliography}{6}
 
