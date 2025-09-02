@@ -9,7 +9,7 @@
 \usepackage{microtype}
 \usepackage{siunitx}
 \usepackage{float}
-\usepackage[colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue]{hyperref}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue,pdfborder={0 0 1}]{hyperref}
 
 \lstdefinestyle{Python}{
     language=Python,
@@ -36,13 +36,15 @@
 
 \section{Introduction}
 
-In this blog post, we demonstrate how to simulate and analyze a Geometric Brownian Motion (GBM) process using QMCPy in Python.
+In this blog, we demonstrate how to simulate and analyze a geometric Brownian motion (GBM) process using QMCPy in Python.
 GBM is widely used in finance to model stock prices and other assets. 
 We will walk through key code snippets, plots, and insights.
 
 GBM is a continuous stochastic process in which the natural logarithm of its values follows a Brownian motion $[1]$.
 Mathematically, it can be defined as follows:
-$$S_t = S_0 \, e^{\big(\mu - \frac{\sigma^2}{2}\big)  t + \sigma W_t}, \label{gbm}$$
+\begin{equation}
+S_t = S_0 \, e^{\bigl(\mu - \tfrac{\sigma^2}{2}\bigr)  t + \sigma W_t}, \label{gbm}
+\end{equation}
 where
 \begin{itemize}
 \item $S_0$ is the initial value, 
@@ -60,16 +62,16 @@ At any time $t > 0$, $S_t$ follows a log-normal distribution with expected value
     \text{Cov}(S_{t_i}, S_{t_j}) = S_0^2 e^{\mu(t_i + t_j)} \left(e^{\sigma^2 \min(t_i, t_j)} - 1\right).$
 \end{itemize}
 
-GBM is commonly used to model stock prices driving option payoffs. 
+GBM is commonly used to model stock prices driving option payoffs in derivatives pricing $[4, 5]$. 
 
-\section{GBM object in QMCPy}
+\section{GBM Objects in QMCPy}
 
 GBM in QMCPy inherits from BrownianMotion class $[2, 3]$. 
-We can create a simple GBM instance and generate sample paths to see the class in action:
+We can create a simple GBM instance and generate sample paths to see the class in action; see Listing~\ref{lst:gbm_qmcpy2}:
 
 \lstinputlisting[
     style=Python,
-    caption={Generating 4 samples from a 2-D GBM using QMCPy},
+    caption={Generating 4 samples from a 2-D GBM using QMCPy.},
     label={lst:gbm_qmcpy2}
 ]{code/gbm_qmcpy.py}
 
@@ -81,17 +83,17 @@ array([[0.60712598, 1.63922882],
        [0.62311813, 0.65946838]])
 \end{verbatim}
 
-Let's validate the  theoretical properties by generating a large number of GBM samples and comparing the empirical moments with the theoretical values. Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The results are reported in Table~\ref{tab1}.
+Let's validate the  theoretical properties by generating a large number of GBM samples and comparing the empirical moments with the theoretical values. Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The code in Listing~\ref{lst:gbm-validation} computes these statistics. The results are reported in Table~\ref{tab1}.
 
 \lstinputlisting[
     style=Python,
-    caption={Generating and validating GBM sample moments},
+    caption={Generating and validating GBM sample moments.},
     label={lst:gbm-validation}
 ]{code/gbm_moments_validation.py} 
 
 \begin{table}[tbp]
 \centering
-\caption{Theoretical vs Empirical Validation of GBM Properties}
+\caption{Theoretical vs Empirical Validation of GBM Properties.}
 \begin{tabular}{ll}
 \hline
 \textbf{Statistic} & \textbf{Value} \\
@@ -105,18 +107,17 @@ Diffusion ($\sigma^2$) & 0.040\\
 Mean  & [101.005,\; 102.020,\; 103.045,\; 104.081,\; 105.127] \\
 Decomposition Type & PCA \\
 \hline
-\multicolumn{2}{l}{\textbf{Covariance Matrix:}} \\
-\multicolumn{2}{l}{
+Covariance Matrix & 
 \(
-\begin{bmatrix}
-81.943 & 82.767 & 83.599 & 84.439 & 85.288 \\
+\left[\begin{array}{rrrrr}
+81.943 &  82.767 &  83.599 &  84.439 &  85.288 \\
 82.767 & 167.869 & 169.556 & 171.260 & 172.981 \\
 83.599 & 169.556 & 257.923 & 260.516 & 263.134 \\
 84.439 & 171.260 & 260.516 & 352.258 & 355.798 \\
 85.288 & 172.981 & 263.134 & 355.798 & 451.029
-\end{bmatrix}
+\end{array}\right]
 \)
-} \\
+\\
 \hline
 \end{tabular}
 \label{tab1}
@@ -126,33 +127,34 @@ Decomposition Type & PCA \\
 
 Below we compare Brownian motion and geometric Brownian motion using the same parameters: $\texttt{drift} = 0$, $\texttt{diffusion} = 1$, $\texttt{initial\_value} = 1$.
 
-First, let's define a utility function that will help us visualize GBM paths with different samplers and parameters:
+First, let's define a utility function that will help us visualize GBM paths with different samplers and parameters (Listing~\ref{lst:plot-paths}):
 \lstinputlisting[
     style=Python,
-    caption={Function to plot BM and GBM sample paths},
+    caption={Function to plot BM and GBM sample paths.},
     label={lst:plot-paths}
 ]{code/plot_paths.py}
 
 
-Paths of the driftless Brownian motion should fluctuate symmetrically around the initial value (y = 1) and can take negative values, while those of Geometric Brownian Motion remain strictly positive.
+Paths of the driftless Brownian motion should fluctuate symmetrically around the initial value (y = 1) and can take negative values, while those of Geometric Brownian Motion remain strictly positive. We generate these samples in Listing~\ref{lst:gbm_qmcpy3}.
 
 \lstinputlisting[
     style=Python,
-    caption={Generate 16 BM and 16 GBM sample paths},
+    caption={Generate 16 BM and 16 GBM sample paths.},
     label={lst:gbm_qmcpy3}
 ]{code/bm_gbm_16.py}
 
 
 Next, we demonstrate how easily one can swap samplers or change parameters.  For example, to model a stock price
-with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$ over a 5‐year horizon using IID sampling:
+with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$ over a 5‐year horizon using IID sampling; see Listing~\ref{lst:gbm_iid_32}.
 
 \lstinputlisting[
     style=Python,
-    caption={Generate 32 GBM sample paths with IID sampling},
+    caption={Generate 32 GBM sample paths with IID sampling.},
     label={lst:gbm_iid_32}
 ]{code/gbm_iid_32.py}
 
- 
+The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}.
+
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=0.49\textwidth]{images/figure_1.png}
@@ -164,24 +166,24 @@ with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$
 \end{figure}
 
 
-Or, to use a low‐discrepancy lattice sampler with the same parameters:
+Or, to use a low‐discrepancy lattice sampler with the same parameters (Listing~\ref{lst:gbm_lattice_32}):
 \lstinputlisting[
     style=Python,
-    caption={Generate 32 GBM sample paths with lattice sampling},
+    caption={Generate 32 GBM sample paths with lattice sampling.},
     label={lst:gbm_lattice_32}
 ]{code/gbm_lattice_32.py}
 
- 
 
 \section{QuantLib vs QMCPy Comparison}
 
-In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. The numerical results are summarized in Table~\ref{tab2}.
+In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. We use Listing~\ref{lst:quantlib} to generate the QuantLib paths. The numerical results are summarized in Table~\ref{tab2}.
 \lstinputlisting[
     style=Python,
-    caption={Function to generate GBM paths with QuantLib},
+    caption={Function to generate GBM paths with QuantLib.},
     label={lst:quantlib}
 ]{code/quantlib.py}
 
+The covariance heatmap comparison is shown in Figure~\ref{fig:qmcpy_quantlib_comparison}.
 
 \begin{figure}[tbp]
 \centering
@@ -244,12 +246,12 @@ Glasserman, P. (2003). \textit{Monte Carlo Methods in Financial Engineering}. Sp
 \bibitem[2]{choi2022}
 Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2022).
 Quasi-Monte Carlo Software. In A. Keller (Ed.), \textit{Monte Carlo and Quasi-Monte Carlo Methods}.
-Springer International Publishing.
+Springer International Publishing. DOI: \url{https://doi.org/10.1007/978-3-030-98319-2_2}.
 
 \bibitem[3]{qmcpy2023}
-Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2025).
+Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2020--2025).
 QMCPy: A quasi-Monte Carlo Python Library (Versions 1–2).
-DOI: 10.5281/zenodo.16822646.
+DOI: \url{https://doi.org/10.5281/zenodo.16822646}. Retrieved from \url{https://www.qmcpy.org}.
 
 \bibitem[4]{hull2017}
 Hull, J. C. (2017). \textit{Options, Futures, and Other Derivatives} (10th ed.). Pearson.
@@ -259,11 +261,8 @@ Ross, S. M. (2014). \textit{Introduction to Probability Models} (11th ed.). Acad
 
 \bibitem[6]{quantlib} 
 The QuantLib contributors. (2003--2025). \textit{QuantLib: A free/open-source library for quantitative finance} (Version 1.38).
-DOI: 10.5281/zenodo.1440997. Retrieved from \url{https://www.quantlib.org}.
+DOI: \url{https://doi.org/10.5281/zenodo.1440997}. Retrieved from \url{https://www.quantlib.org}.
 % https://github.com/lballabio/QuantLib/commit/87c5ee2e17e9dd17488ec9957159b89db18d5d26
 \end{thebibliography}
-
-
- 
 
 \end{document}
