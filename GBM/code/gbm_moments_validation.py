@@ -2,7 +2,7 @@
 S0, mu, sigma, T, n_samples = 100.0, 0.05, 0.20, 1.0, 2**12
 diffusion = sigma**2
 sampler = qp.Lattice(5, seed=42)
-qp_gbm = qp.GeometricBrownianMotion(sampler, t_final=T, initial_value=S0, drift=mu, diffusion=sigma)
+qp_gbm = qp.GeometricBrownianMotion(sampler, t_final=T, initial_value=S0, drift=mu, diffusion=diffusion)
 paths = qp_gbm.gen_samples(n_samples)
 S_T = paths[:, -1]  # Final values only
 
