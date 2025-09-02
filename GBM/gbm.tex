@@ -30,7 +30,7 @@
     numbers=left,
     numberstyle=\tiny,
     stepnumber=1,
-    numbersep=5pt,
+    numbersep=5pfaster,
     frame=single,
     breaklines=true,
     postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
@@ -76,7 +76,7 @@ where
 \begin{itemize}
 \item $S_0$ is the initial value, 
 \item $\mu$ is a drift coefficient
-\item $\sigma^2$ is a diffusion coefficient ($\sigma$ is volatility),
+\item $\sigma^2$ is a diffusion coefficient ($\sigma$ is volatility)
 \item $W_t$ is a (standard) BM.
 \end{itemize}
 
@@ -233,7 +233,7 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
 The numerical results are summarized in Table~\ref{tab2}. 
 
-Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 2-4 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
+Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5--3 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
 
 \begin{comment}
 \lstinputlisting[
@@ -298,7 +298,7 @@ ensuring that the simulated paths respect the intended covariance structure and 
 \begin{tcolorbox}[title=Takeaways,colback=blue!1,colframe=blue!30!black]
 \begin{itemize}[topsep=0pt,itemsep=0pt,parsep=0pt,leftmargin=*]
     \item Accuracy parity: QMCPy's GBM matches QuantLib's results and the theoretical moments (see Table~\ref{tab2}).
-    \item Speed: Vectorized operations typically deliver 2--4$\times$ faster path generation in QMCPy for thousands of paths.
+    \item Speed: Vectorized operations typically deliver 1.5--3$\times$ faster path generation in QMCPy for thousands of paths.
     \item Flexibility: Swap samplers (e.g., IID, lattice) or covariance decompositions (e.g., PCA, Cholesky) with a single argument change.
 \end{itemize}
 \end{tcolorbox}
@@ -317,7 +317,8 @@ Springer International Publishing. DOI: \url{https://doi.org/10.1007/978-3-030-9
 \bibitem[3]{qmcpy2023}
 Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2020--2025).
 QMCPy: A quasi-Monte Carlo Python Library (Version 2).
-DOI: \url{https://doi.org/10.5281/zenodo.16822646}. Retrieved from \url{https://www.qmcpy.org}.
+DOI: \url{https://doi.org/10.5281/zenodo.16822646}. 
+Retrieved from \url{https://www.qmcpy.org}.
 
 \bibitem[4]{hull2017}
 Hull, J. C. (2017). \textit{Options, Futures, and Other Derivatives} (10th ed.). Pearson.
@@ -326,8 +327,10 @@ Hull, J. C. (2017). \textit{Options, Futures, and Other Derivatives} (10th ed.).
 Ross, S. M. (2014). \textit{Introduction to Probability Models} (11th ed.). Academic Press.
 
 \bibitem[6]{quantlib} 
-The QuantLib contributors. (2003--2025). \textit{QuantLib: A free/open-source library for quantitative finance} (Version 1.38).
-DOI: \url{https://doi.org/10.5281/zenodo.1440997}. Retrieved from \url{https://www.quantlib.org}.
+The QuantLib contributors. (2003--2025). 
+QuantLib: A free/open-source library for quantitative finance (Version 1.38).
+DOI: \url{https://doi.org/10.5281/zenodo.1440997}. 
+Retrieved from \url{https://www.quantlib.org}.
 % https://github.com/lballabio/QuantLib/commit/87c5ee2e17e9dd17488ec9957159b89db18d5d26
 \end{thebibliography}
 
