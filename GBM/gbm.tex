@@ -65,7 +65,7 @@ Minimal example to simulate 16 geometric Brownian motion paths over $\lbrack 0,1
 
 In this blog, we demonstrate how to simulate and analyze a geometric Brownian motion (GBM) process using QMCPy in Python.
 GBM is widely used in finance to model stock prices and other assets. 
-We will walk through key code snippets, plots, and insights.
+We will walk through key code snippets, plots, and insights. The numerical results can be reproduced using the Jupyter notebook available at \href{gbm\_demo.ipynb}{\url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/gbm\_demo.ipynb}}.
 
 GBM is a continuous stochastic process in which the natural logarithm of its values follows a Brownian motion (BM) $[1]$.
 Mathematically, it can be defined as follows:
@@ -76,11 +76,11 @@ where
 \begin{itemize}
 \item $S_0$ is the initial value, 
 \item $\mu$ is a drift coefficient
-\item $\sigma^2$ is a diffusion coefficient  
+\item $\sigma^2$ is a diffusion coefficient ($\sigma$ is volatility),
 \item $W_t$ is a (standard) BM.
 \end{itemize}
 
-At any time $0 < t < T$, where $0$ and $T$ represent the beginning and end time of the process, $S_t$ follows a log-normal distribution with expected value and variance as follows (see Section 3.2 in $[1]$):
+At any time $0 < t \le T$, where $0$ and $T$ represent the beginning and end time of the process, $S_t$ follows a log-normal distribution with expected value and variance as follows (see Section 3.2 in $[1]$):
 \begin{itemize}
 \item
  $E[S_t] = S_0 e^{\mu t}$
@@ -294,6 +294,7 @@ S_{t+\Delta t} \;=\; S_t\,\exp\!\Bigl((\mu - \tfrac12\sigma^2)\Delta t \;+\;\sig
 \]
 ensuring that the simulated paths respect the intended covariance structure and remain strictly positive (with strict‐positivity checks raising warnings or errors if violated).
 
+\bigskip
 \begin{tcolorbox}[title=Takeaways,colback=blue!1,colframe=blue!30!black]
 \begin{itemize}[topsep=0pt,itemsep=0pt,parsep=0pt,leftmargin=*]
     \item Accuracy parity: QMCPy's GBM matches QuantLib's results and the theoretical moments (see Table~\ref{tab2}).
