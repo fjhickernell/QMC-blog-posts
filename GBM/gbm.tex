@@ -157,7 +157,7 @@ Covariance Matrix &
 \section{GBM vs BM}
 
 Below we compare BM and GBM using the same parameters: $\texttt{drift} = 0$, $\texttt{diffusion} = 1$, $\texttt{initial\_value} = 1$.
-Paths of the driftless BM should fluctuate symmetrically around the initial value ($y = 1$) and can take negative values, while those of GBM remain strictly positive. We generate these samples in Listing~\ref{lst:gbm_qmcpy3}.
+The driftless BM paths should fluctuate symmetrically around the initial value ($y = 1$) and can take negative values, while those of the GBM remain strictly positive. We generate these samples in Listing~\ref{lst:gbm_qmcpy3}.
 
 \lstinputlisting[
     style=Python,
@@ -233,7 +233,7 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
 The numerical results are summarized in Table~\ref{tab2}. 
 
-Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5--3 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems requiring comprehensive  support for financial modeling and risk management.
+Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5 to 3 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems that require comprehensive support for financial modeling and risk management.
 
 \begin{comment}
 \lstinputlisting[
@@ -272,17 +272,17 @@ Theoretical & 105.13 & 21.24 & ---  \\
 
 The \texttt{GeometricBrownianMotion} class in QMCPy is engineered for speed, robustness, and mathematical correctness. Its design leverages object-oriented inheritance and vectorized operations, resulting in both flexibility and high performance.
 \texttt{GeometricBrownianMotion} inherits from \texttt{BrownianMotion} which itself inherits from \texttt{Gaussian}. This layered design allows the GBM class to reuse and extend efficient implementations for Gaussian random vectors and BM increments.
-The constructor rigorously checks input parameters (e.g., positivity of initial value and diffusion, valid decomposition type), ensuring mathematical integrity and preventing runtime errors.
+The constructor rigorously checks input parameters (e.g., positivity of initial value and diffusion, valid decomposition type), ensuring mathematical integrity and preventing run-time errors.
 
 The class uses vectorized NumPy operations to generate entire arrays of GBM paths in a single call, minimizing Python loops and maximizing computational throughput. Sample generation proceeds in two stages:
 \begin{enumerate}
 \item 
 The parent class \texttt{BrownianMotion} generates standard BM sample paths using the specified sampler (e.g., low-discrepancy lattice, IID uniform), with drift and diffusion handled in the mean and covariance structure.
-\item  The GBM class transforms the BM samples via the exponential mapping    \eqref{gbm}, performed in a fully vectorized fashion, ensuring that thousands of paths can be efficiently simulated.
+\item  The GBM class transforms the BM samples via the exponential mapping \eqref{gbm}, performed in a fully vectorized fashion, ensuring that thousands of paths can be efficiently simulated.
 \end{enumerate}
 The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging \href{https://numpy.org/devdocs/user/basics.broadcasting.html}{NumPy’s broadcasting} for efficient computations. (Briefly, broadcasting in NumPy allows arithmetic operations between arrays of different shapes by automatically expanding the smaller array to match the shape of the larger array.)
 
- The Gaussian and BM classes both implement both Cholesky and PCA factorization of the covariance matrix
+ The Gaussian and BM classes both implement Cholesky and PCA factorization of the covariance matrix
 \[
 \Sigma \;=\; L\,L^{\!\top}
 \quad\text{and}\quad
