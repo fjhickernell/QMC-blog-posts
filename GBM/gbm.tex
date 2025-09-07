@@ -76,7 +76,7 @@ where
 \begin{itemize}
 \item $S_0$ is the initial value, 
 \item $\mu$ is a drift coefficient
-\item $\sigma^2$ is a diffusion coefficient ($\sigma$ is volatility)
+\item $\sigma$ is the volatility (note: QMCPy uses diffusion = $\sigma^2$)
 \item $W_t$ is a (standard) BM.
 \end{itemize}
 
@@ -113,6 +113,10 @@ The output shows 4 sample paths evaluated at 2 time points, yielding a $(4 \time
 \end{array}
 \right].
 \]
+
+\subsection{Log-Normality Property}
+
+The log-normal property is fundamental in financial modeling because it ensures asset prices remain strictly positive (as required in reality) while allowing for unlimited upside potential. This property makes GBM the cornerstone of the Black-Scholes model and many derivative pricing frameworks.
 
 To validate theoretical properties, we generate $2^{12} = 4096$ paths over 5 time steps and compare empirical moments with theoretical values.  Note that the theoretical values match the last values captured in \texttt{qp\_gbm.mean\_gbm} and \texttt{qp\_gbm.covariance\_gbm} for the final time point. The results are shown in Table~\ref{tab1}.
 
@@ -233,7 +237,7 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
 The numerical results are summarized in Table~\ref{tab2}. 
 
-Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5 to 3 times faster due to vectorized operations, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems that require comprehensive support for financial modeling and risk management.
+Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5 to 2 times faster due to vectorized operations, lazy loading, and optimized memory management. More importantly, it demonstrates superior numerical accuracy (lower mean absolute errors) with Sobol, lattice and Halton samplers, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems that require comprehensive support for financial modeling and risk management.
 
 \begin{comment}
 \lstinputlisting[
@@ -241,7 +245,6 @@ Both libraries produce statistically equivalent GBM simulations that match theor
     caption={Function to generate GBM paths with QuantLib.},
     label={lst:quantlib}
 ]{code/quantlib.py}
-
 \end{comment}
 
 
@@ -260,7 +263,7 @@ To evaluate computational efficiency, we conducted comprehensive performance ben
 
 Figure~\ref{fig:gbm_performance} presents the results of our performance analysis. The left panel (a) shows how execution time scales with the number of time steps while keeping the number of paths fixed at 4,096. Both libraries exhibit approximately linear scaling, but QMCPy demonstrates superior performance at smaller time step counts, with QuantLib becoming more competitive as the number of time steps increases. The right panel (b) examines scaling behavior with respect to the number of paths while fixing the time steps at 252 (representing a typical trading year). Here, QMCPy maintains a consistent performance advantage across all path counts, with the gap becoming more pronounced at higher path numbers. This performance difference is particularly relevant for Monte Carlo applications that require large numbers of simulation paths for accurate estimation.
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
@@ -279,7 +282,7 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
     \label{fig:gbm_performance}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
@@ -331,8 +334,8 @@ ensuring that the simulated paths respect the intended covariance structure and 
 To the best of our knowledge, this blog presents the first publicly available benchmark comparing QuantLib and QMCPy for Geometric Brownian Motion (GBM) simulations. Key takeaways include:
 \begin{itemize}%[topsep=0pt,itemsep=0pt,parsep=0pt,leftmargin=*]
     \item Flexibility: Change one argument in QMCPy to swap samplers or covariance decompositions.
-    \item Accuracy: QMCPy's GBM matches QuantLib and theoretical moments (see Table~\ref{tab2}).
-    \item Speed: Vectorized ops produce 1 to 2 times faster path generation in QMCPy than QuantLib.
+    \item Accuracy: QMCPy's GBM matches QuantLib and theoretical moments, with superior numerical accuracy for quasi-Monte Carlo samplers (see Table~\ref{tab2}).
+    \item Speed: Vectorized operations and optimized memory management produce 1.5 to 2 times faster path generation in QMCPy than QuantLib.
 \end{itemize}
 \end{tcolorbox}
 
