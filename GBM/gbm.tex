@@ -263,7 +263,7 @@ To evaluate computational efficiency, we conducted comprehensive performance ben
 
 Figure~\ref{fig:gbm_performance} presents the results of our performance analysis. The left panel (a) shows how execution time scales with the number of time steps while keeping the number of paths fixed at 4,096. Both libraries exhibit approximately linear scaling, but QMCPy demonstrates superior performance at smaller time step counts, with QuantLib becoming more competitive as the number of time steps increases. The right panel (b) examines scaling behavior with respect to the number of paths while fixing the time steps at 252 (representing a typical trading year). Here, QMCPy maintains a consistent performance advantage across all path counts, with the gap becoming more pronounced at higher path numbers. This performance difference is particularly relevant for Monte Carlo applications that require large numbers of simulation paths for accurate estimation.
 
-\begin{figure}[tbp]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
@@ -282,7 +282,9 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
     \label{fig:gbm_performance}
 \end{figure}
 
-\begin{figure}[tbp]
+To further validate these performance findings, we conducted an extended parameter sweep analysis across a broader range of configurations. Figure~\ref{fig:gbm_performance2} presents the comprehensive results of this analysis, systematically examining performance across varying time steps and path counts. The extended benchmarks confirm QMCPy's consistent computational advantages and demonstrate robust scaling behavior across the parameter space, reinforcing its suitability for high-performance quasi-Monte Carlo applications.
+
+\begin{figure}[H]
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
@@ -299,7 +301,7 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
         \label{subfig:performance_paths2}
     \end{subfigure}
     \end{comment}
-    \caption{GBM Performance Comparison: QuantLib vs QMCPy. Left plot shows performance scaling with number of time steps for fixed paths. Right plot shows performance scaling with number of paths for fixed number of time steps.}
+    \caption{Comprehensive parameter sweep performance analysis comparing QuantLib and QMCPy across varying time steps and path counts. The results demonstrate QMCPy's consistent performance advantages and superior scaling characteristics for both dimensions of the parameter space.}
     \label{fig:gbm_performance2}
 \end{figure}
 
