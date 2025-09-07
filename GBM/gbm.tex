@@ -239,14 +239,11 @@ The numerical results are summarized in Table~\ref{tab2}.
 
 Both libraries produce statistically equivalent GBM simulations that match theoretical values. QMCPy typically runs 1.5 to 2 times faster due to vectorized operations, lazy loading, and optimized memory management. More importantly, it demonstrates superior numerical accuracy (lower mean absolute errors) with Sobol, lattice and Halton samplers, making it excellent for research and high-performance applications. QuantLib remains the industry standard for production systems that require comprehensive support for financial modeling and risk management.
 
-\begin{comment}
 \lstinputlisting[
     style=Python,
     caption={Function to generate GBM paths with QuantLib.},
     label={lst:quantlib}
-]{code/quantlib.py}
-\end{comment}
-
+]{code/quantlib_util.py}
 
 \input{outputs/gbm_comparison_table.tex}
 
@@ -272,12 +269,6 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
         %\label{subfig:performance}
     \end{subfigure}
     %\hfill
-    %\begin{subfigure}{0.49\textwidth}
-    %    \centering
-    %    \includegraphics[width=\textwidth]{images/figure_7.png}
-    %    \caption{Performance vs Number of Paths}
-    %    \label{subfig:performance_paths}
-    %\end{subfigure}
     \caption{GBM Performance Comparison: QuantLib vs QMCPy. Left plot shows performance scaling with number of time steps for fixed paths. Right plot shows performance scaling with number of paths for fixed number of time steps.}
     \label{fig:gbm_performance}
 \end{figure}
@@ -293,13 +284,6 @@ To further validate these performance findings, we conducted an extended paramet
         \label{subfig:performance_steps2}
     \end{subfigure}
     \begin{comment}
-    \hfill
-    \begin{subfigure}{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/figure_8.png}
-        \caption{Performance vs Number of Paths}
-        \label{subfig:performance_paths2}
-    \end{subfigure}
     \end{comment}
     \caption{Comprehensive parameter sweep performance analysis comparing QuantLib and QMCPy across varying time steps and path counts. The results demonstrate QMCPy's consistent performance advantages and superior scaling characteristics for both dimensions of the parameter space.}
     \label{fig:gbm_performance2}
@@ -354,7 +338,7 @@ Springer International Publishing. DOI: \url{https://doi.org/10.1007/978-3-030-9
 
 \bibitem[3]{qmcpy2023}
 Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2020--2025).
-QMCPy: A quasi-Monte Carlo Python Library (Version 2).
+QMCPy: A quasi-Monte Carlo Python Library (Version 2.1).
 DOI: \url{https://doi.org/10.5281/zenodo.16822646}. 
 Retrieved from \url{https://www.qmcpy.org}.
 
