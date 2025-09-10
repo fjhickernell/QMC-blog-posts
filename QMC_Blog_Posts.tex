@@ -36,7 +36,6 @@
     filecolor=magenta,      
     urlcolor=blue,
 }
-\usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 
 % prevents long code lines in listings overflow
@@ -82,6 +81,16 @@
     language=C
 }
 \usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
+\usepackage{microtype}
+\sisetup{
+    round-mode = places,
+    round-precision = 3,
+    output-decimal-marker = .
+}
+\usepackage{subcaption}
+\usepackage{enumitem} % Added for itemize spacing control
+
+
 \newcommand{\HickernellFJ}{Hickernell\xspace}
 \addbibresource{main.bib}
 \addbibresource{FJHown23.bib}
@@ -203,7 +212,7 @@ The Google doc where we are defining the launch concept around the blogs is here
 
 \blogpost{Linear Matrix Scrambling and Digital Shift for Halton}{Aadit Jain}{lms_ds_halton}{LMS_DS_Halton/lms_ds_halton}
 
-%\blogpost{Introducing Geometric Brownian Motion in QMCPy}{Larysa}{gbm}{GBM/gbm}
+\blogpost{Highly Efficient Geometric Brownian Motion Modeling with QMCPy}{arysa Matiukha, Aleksei Sorokin, and Sou-Cheng Cho}{gbm}{GBM/gbm}
 
 \blogpost{Parsl Accelerated QMCpy Notebook Tests}{Dr. Sou-Cheng Choi and Joshua Jay Herman (QMC Development Team)}{parslTestbookQMCblog}{booktests/parslTestbookQMCblog}
 \end{document}

@@ -9,4 +9,10 @@ Accelerating QMCpy Notebook Tests with Parsl
 The main goal for distributing the testing of our notebooks is that we need our software that we release to be reproducable and they are resource intensive to execute. Testbook was chosen because we could seperate our unit tests that wouldn't have to be executed with our notebooks. This also had the side effect that we could also have parsl execute our testbook tests. Right now we only made simple 
 
 \subsection{Results}
-We worked together to make a simple Parsl setup speedup of +216%
+To make sure that our test harness would be effective and would not slow down our initial tests we setup testbook tests that would make sure our notebooks would execute without syntax errors and got a 2.16x percent speedup. After adding more tests of the notebooks we still see a 1.36x percent speedup which is encouraging and expected. Also, even if the testbook test harness would not show an increase we also know that testbook workloads could als 
+
+\subsection{Further Work}
+
+Continuing our test coverage to first get full Juypter notebooks tests using our testbook test hanress would be the primary goal of the system. Extending to our doctest and pytests would have to first be evaluated and implemented 
+
+At the presentation of this work to the Parsl group they suggested that this distributed testbook system is quite general. One way to apply this is to make the test harness not dependant on qmcpy but instead a separate package that could execute pytest tests not limited to testbook such as doctests, pytest , unittests and Cucumber tests.

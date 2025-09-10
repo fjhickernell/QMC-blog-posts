@@ -1,49 +1,3 @@
-\begin{comment}
-\documentclass{article}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage[margin=1in]{geometry}
-\usepackage{booktabs} 
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{mathtools}
-\usepackage{microtype}
-\usepackage{siunitx}
-\sisetup{
-    round-mode = places,
-    round-precision = 3,
-    output-decimal-marker = .
-}
-\usepackage{float}
-\usepackage{subcaption}
-\usepackage{verbatim}
-\usepackage{enumitem} % Added for itemize spacing control
-\usepackage[most]{tcolorbox}
-\usepackage[colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue]{hyperref}
-
-\lstdefinestyle{Python}{
-    language=Python,
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{blue}\bfseries,
-    stringstyle=\color{red},
-    commentstyle=\color{gray}\itshape,
-    showstringspaces=false,
-    numbers=left,
-    numberstyle=\tiny,
-    stepnumber=1,
-    numbersep=5pt,
-    frame=single,
-    breaklines=true,
-    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
-}
-
-\title{Highly Efficient Geometric Brownian Motion Modeling with QMCPy}
-\author{Larysa Matiukha, Aleksei Sorokin, and Sou-Cheng Choi}
-\date{\today}
-
-\begin{document}
-\maketitle
-\end{comment}
 
 \begin{tcolorbox}[title=Quick Start,colback=blue!1,colframe=blue!30!black,breakable]
 Install the required Python packages:
@@ -59,11 +13,11 @@ Generate 16 paths on $\lbrack 0,1\rbrack$ with QMCPy's sampler  ($S_0=1$, $\mu=0
     frame=none,
     numbers=none,
     label={lst:quickstart}
-]{code/quickstart.py}
+]{GBM/code/quickstart.py}
 \end{tcolorbox}
 
 
-\section{Introduction}
+\subsection{Introduction}
 
 In this blog, we demonstrate how to simulate and analyze a geometric Brownian motion (GBM) process using QMCPy in Python.
 GBM is widely used in finance to model stock prices and other assets. 
@@ -93,7 +47,7 @@ At any time $0 < t \le T$, where $0$ and $T$ represent the beginning and end tim
 
 GBM is commonly used to model stock prices driving option payoffs in derivatives pricing $[4, 5]$. 
 
-\section{GBM Objects in QMCPy}
+\subsection{GBM Objects in QMCPy}
 
 GBM in QMCPy inherits from BrownianMotion class $[2, 3]$. 
 We can create a simple GBM instance and generate sample paths to see the class in action; see Listing~\ref{lst:gbm_qmcpy2}:
@@ -102,7 +56,7 @@ We can create a simple GBM instance and generate sample paths to see the class i
     style=Python,
     caption={Generating 4 GBM sample paths evaluated at 2 time points using QMCPy.},
     label={lst:gbm_qmcpy2}
-]{code/gbm_qmcpy.py}
+]{GBM/code/gbm_qmcpy.py}
 
 The output shows 4 sample paths evaluated at 2 time points, yielding a $(4 \times 2)$ array where rows represent paths and columns represent time steps:
 \[
@@ -126,7 +80,7 @@ To validate theoretical properties, we generate $2^{12} = 4096$ paths over 5 tim
     style=Python,
     caption={Generating and validating GBM sample moments.},
     label={lst:gbm-validation}
-]{code/gbm_moments_validation.py} 
+]{GBM/code/gbm_moments_validation.py} 
 
 \begin{table}[tbp]
 \centering
@@ -160,7 +114,7 @@ Covariance Matrix &
 \label{tab1}
 \end{table}
 
-\section{GBM vs BM}
+\subsection{GBM vs BM}
 
 Below we compare BM and GBM using the same parameters: $\texttt{drift} = 0$, $\texttt{diffusion} = 1$, $\texttt{initial\_value} = 1$.
 The driftless BM paths should fluctuate symmetrically around the initial value ($y = 1$) and can take negative values, while those of the GBM remain strictly positive. We generate these samples in Listing~\ref{lst:gbm_qmcpy3}.
@@ -169,7 +123,7 @@ The driftless BM paths should fluctuate symmetrically around the initial value (
     style=Python,
     caption={Generate 16 BM and 16 GBM sample paths.},
     label={lst:gbm_qmcpy3}
-]{code/bm_gbm_16.py}
+]{GBM/code/bm_gbm_16.py}
 
 Next, we demonstrate how easily one can swap samplers or change parameters in QMCPy.  For example, to model a stock price
 with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$ over a 5‐year horizon using IID sampling; see Listing~\ref{lst:gbm_iid_32}.
@@ -178,14 +132,14 @@ with initial value $S_0=50$, drift $\mu=0.1$, and volatility $\sigma=\sqrt{0.2}$
     style=Python,
     caption={Generate 32 GBM sample paths with IID sampling.},
     label={lst:gbm_iid_32}
-]{code/gbm_iid_32.py}
+]{GBM/code/gbm_iid_32.py}
 
 Or, to use a low‐discrepancy lattice sampler with the same parameters (Listing~\ref{lst:gbm_lattice_32}):
 \lstinputlisting[
     style=Python,
     caption={Generate 32 GBM sample paths with lattice sampling.},
     label={lst:gbm_lattice_32}
-]{code/gbm_lattice_32.py}
+]{GBM/code/gbm_lattice_32.py}
 
 %Now, let's define a utility function that will help us visualize BM or GBM paths with different samplers and parameters (Listing~\ref{lst:plot-paths}). 
 The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplots~(\subref{fig:bm_iid}), (\subref{fig:gbm_iid}), (\subref{fig:bm_lattice}), and (\subref{fig:gbm_lattice}) show, respectively: 
@@ -202,31 +156,31 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
     style=Python,
     caption={Function to plot BM and GBM sample paths.},
     label={lst:plot-paths}
-]{code/plot_paths.py}
+]{GBM/code/plot_paths.py}
 \end{comment}
 
 \begin{figure}[tbp]
 \centering
 \begin{subfigure}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{images/figure_1.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_1.png}
 \caption{}
 \label{fig:bm_iid}
 \end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{images/figure_2.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_2.png}
 \caption{}
 \label{fig:gbm_iid}
 \end{subfigure}
 \begin{subfigure}[b]{0.49\textwidth}
-\includegraphics[width=\textwidth]{images/figure_3.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_3.png}
 \caption{}
 \label{fig:bm_lattice}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.49\textwidth}
-\includegraphics[width=\textwidth]{images/figure_4.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_4.png}
 \caption{}
 \label{fig:gbm_lattice}
 \end{subfigure}
@@ -234,7 +188,7 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 \label{fig:bm_gbm_paths}
 \end{figure}
 
-\section{QuantLib vs QMCPy Comparison}
+\subsection{QuantLib vs QMCPy Comparison}
 
 In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
 The numerical results are summarized in Table~\ref{tab2}. 
@@ -245,15 +199,15 @@ Both libraries produce statistically equivalent GBM simulations that match theor
     style=Python,
     caption={Function to generate GBM paths with QuantLib.},
     label={lst:quantlib}
-]{code/quantlib_util.py}
+]{GBM/code/quantlib_util.py}
 
-\input{outputs/gbm_comparison_table.tex}
+\input{GBM/outputs/gbm_comparison_table.tex}
 
  In Figure~\ref{fig:qmcpy_quantlib_comparison}, the top row shows sample paths: QMCPy on the left and QuantLib on the right. The bottom-left panel overlays the marginal distribution at $t=1$ (e.g., histograms or KDEs), where both libraries yield nearly identical shapes with means and standard deviations matching Table~\ref{tab2}. The bottom-right panel is a QMCPy covariance heatmap with time 0 at the top of the $y$-axis; the variance increases along the diagonal with time and the off-diagonal structure follows $\min(t_i,t_j)$, consistent with the analytic form and the numerical matrix in Table~\ref{tab1}.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1\textwidth]{images/figure_5.png}
+\includegraphics[width=1\textwidth]{GBM/images/figure_5.png}
 \caption{QMCPy vs QuantLib comparison. Top: sample paths from QMCPy (left) and QuantLib (right). Bottom left: marginal distribution at $t=1$ showing close agreement between libraries and with Table~\ref{tab2}. Bottom right: QMCPy covariance heatmap (time 0 at top), consistent with the numerical matrix in Table~\ref{tab1}.}
 \label{fig:qmcpy_quantlib_comparison}
 \end{figure}
@@ -266,7 +220,7 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/figure_6.png}
+        \includegraphics[width=\textwidth]{GBM/images/figure_6.png}
         %\caption{Performance vs Number of Time Steps}
         %\label{subfig:performance}
     \end{subfigure}
@@ -281,7 +235,7 @@ To further validate these performance findings, we conducted an extended paramet
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/figure_7.png}
+        \includegraphics[width=\textwidth]{GBM/images/figure_7.png}
         %\caption{Performance vs Number of Time Steps}
         \label{subfig:performance_steps2}
     \end{subfigure}
@@ -291,7 +245,7 @@ To further validate these performance findings, we conducted an extended paramet
     \label{fig:gbm_performance2}
 \end{figure}
 
-\section{Internals}
+\subsection{Internals}
 
 The \texttt{GeometricBrownianMotion} class in QMCPy is engineered for speed, robustness, and mathematical correctness. Its design leverages object-oriented inheritance and vectorized operations, resulting in both flexibility and high performance.
 \texttt{GeometricBrownianMotion} inherits from \texttt{BrownianMotion} which itself inherits from \texttt{Gaussian}. This layered design allows the GBM class to reuse and extend efficient implementations for Gaussian random vectors and BM increments.
@@ -358,4 +312,3 @@ Retrieved from \url{https://www.quantlib.org}.
 % https://github.com/lballabio/QuantLib/commit/87c5ee2e17e9dd17488ec9957159b89db18d5d26
 \end{thebibliography}
 
-\end{document}
