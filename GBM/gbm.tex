@@ -17,7 +17,7 @@ Generate 16 paths on $\lbrack 0,1\rbrack$ with QMCPy's sampler  ($S_0=1$, $\mu=0
 \end{tcolorbox}
 
 
-\section{Introduction}
+\subsection{Introduction}
 
 In this blog, we demonstrate how to simulate and analyze a geometric Brownian motion (GBM) process using QMCPy in Python.
 GBM is widely used in finance to model stock prices and other assets. 
@@ -47,7 +47,7 @@ At any time $0 < t \le T$, where $0$ and $T$ represent the beginning and end tim
 
 GBM is commonly used to model stock prices driving option payoffs in derivatives pricing $[4, 5]$. 
 
-\section{GBM Objects in QMCPy}
+\subsection{GBM Objects in QMCPy}
 
 GBM in QMCPy inherits from BrownianMotion class $[2, 3]$. 
 We can create a simple GBM instance and generate sample paths to see the class in action; see Listing~\ref{lst:gbm_qmcpy2}:
@@ -114,7 +114,7 @@ Covariance Matrix &
 \label{tab1}
 \end{table}
 
-\section{GBM vs BM}
+\subsection{GBM vs BM}
 
 Below we compare BM and GBM using the same parameters: $\texttt{drift} = 0$, $\texttt{diffusion} = 1$, $\texttt{initial\_value} = 1$.
 The driftless BM paths should fluctuate symmetrically around the initial value ($y = 1$) and can take negative values, while those of the GBM remain strictly positive. We generate these samples in Listing~\ref{lst:gbm_qmcpy3}.
@@ -188,7 +188,7 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 \label{fig:bm_gbm_paths}
 \end{figure}
 
-\section{QuantLib vs QMCPy Comparison}
+\subsection{QuantLib vs QMCPy Comparison}
 
 In this section, we compare QMCPy's GeometricBrownianMotion implementation with the industry-standard QuantLib library [6] to validate its accuracy and performance. %We use Listing~\ref{lst:quantlib} to generate the QuantLib paths.
 The numerical results are summarized in Table~\ref{tab2}. 
@@ -245,7 +245,7 @@ To further validate these performance findings, we conducted an extended paramet
     \label{fig:gbm_performance2}
 \end{figure}
 
-\section{Internals}
+\subsection{Internals}
 
 The \texttt{GeometricBrownianMotion} class in QMCPy is engineered for speed, robustness, and mathematical correctness. Its design leverages object-oriented inheritance and vectorized operations, resulting in both flexibility and high performance.
 \texttt{GeometricBrownianMotion} inherits from \texttt{BrownianMotion} which itself inherits from \texttt{Gaussian}. This layered design allows the GBM class to reuse and extend efficient implementations for Gaussian random vectors and BM increments.
