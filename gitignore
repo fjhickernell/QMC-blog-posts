@@ -6,8 +6,4 @@
 **.log
 **.fdb_latexmk
 **.pdf
-QMC_Blog_Posts.bbl
-QMC_Blog_Posts.bcf
-QMC_Blog_Posts.blg
-QMC_Blog_Posts.run.xml
-QMC_Blog_Posts.toc
+*.bbl
