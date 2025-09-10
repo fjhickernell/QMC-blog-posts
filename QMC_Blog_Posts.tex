@@ -54,7 +54,9 @@
     commentstyle    = \color{darkgreen}\ttfamily,
     frame=single,
     numbers=left,
-    upquote=true % straight quote; need textcop package
+    upquote=true, % straight quote; need textcop package
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
 }
 \definecolor{mGreen}{rgb}{0,0.6,0}
 \definecolor{mGray}{rgb}{0.5,0.5,0.5}
@@ -113,7 +115,7 @@
 \newcommand{\myshade}{60}
 \colorlet{mylinkcolor}{violet}
 \colorlet{mycitecolor}{violet}
-\colorlet{myurlcolor}{YellowOrange}
+%\colorlet{myurlcolor}{YellowOrange}
 
 \begin{comment}
 \hypersetup{
@@ -212,7 +214,7 @@ The Google doc where we are defining the launch concept around the blogs is here
 
 \blogpost{Linear Matrix Scrambling and Digital Shift for Halton}{Aadit Jain}{lms_ds_halton}{LMS_DS_Halton/lms_ds_halton}
 
-\blogpost{Highly Efficient Geometric Brownian Motion Modeling with QMCPy}{arysa Matiukha, Aleksei Sorokin, and Sou-Cheng Cho}{gbm}{GBM/gbm}
+\blogpost{Highly Efficient Geometric Brownian Motion Modeling with QMCPy}{Larysa Matiukha, Aleksei Sorokin, and Sou-Cheng Cho}{gbm}{GBM/gbm}
 
 \blogpost{Parsl Accelerated QMCpy Notebook Tests}{Dr. Sou-Cheng Choi and Joshua Jay Herman (QMC Development Team)}{parslTestbookQMCblog}{booktests/parslTestbookQMCblog}
 \end{document}
