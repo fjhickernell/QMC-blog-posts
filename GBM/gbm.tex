@@ -21,7 +21,7 @@ Generate 16 paths on $\lbrack 0,1\rbrack$ with QMCPy's sampler  ($S_0=1$, $\mu=0
 
 In this blog, we demonstrate how to simulate and analyze a geometric Brownian motion (GBM) process using QMCPy in Python.
 GBM is widely used in finance to model stock prices and other assets. 
-We will walk through key code snippets, plots, and insights. The numerical results can be reproduced using the Jupyter notebook available at \href{gbm\_demo.ipynb}{\url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/gbm\_demo.ipynb}}.
+We will walk through key code snippets, plots, and insights. The numerical results can be reproduced using the Jupyter notebook available at \href{gbm\_demo.ipynb}{\url{https:/github.com/QMCSoftware/QMCSoftware/blob/master/demos/gbm\_demo.ipynb}}.
 
 GBM is a continuous stochastic process in which the natural logarithm of its values follows a Brownian motion (BM) $[1]$.
 Mathematically, it can be defined as follows:
@@ -163,24 +163,24 @@ The generated sample paths are plotted in Figure~\ref{fig:bm_gbm_paths}. Subplot
 \centering
 \begin{subfigure}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{GBM/images//figure_1.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_1.png}
 \caption{}
 \label{fig:bm_iid}
 \end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{GBM/images//figure_2.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_2.png}
 \caption{}
 \label{fig:gbm_iid}
 \end{subfigure}
 \begin{subfigure}[b]{0.49\textwidth}
-\includegraphics[width=\textwidth]{GBM/images//figure_3.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_3.png}
 \caption{}
 \label{fig:bm_lattice}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.49\textwidth}
-\includegraphics[width=\textwidth]{GBM/images//figure_4.png}
+\includegraphics[width=\textwidth]{GBM/images/figure_4.png}
 \caption{}
 \label{fig:gbm_lattice}
 \end{subfigure}
@@ -207,7 +207,7 @@ Both libraries produce statistically equivalent GBM simulations that match theor
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1\textwidth]{GBM/images//figure_5.png}
+\includegraphics[width=1\textwidth]{GBM/images/figure_5.png}
 \caption{QMCPy vs QuantLib comparison. Top: sample paths from QMCPy (left) and QuantLib (right). Bottom left: marginal distribution at $t=1$ showing close agreement between libraries and with Table~\ref{tab2}. Bottom right: QMCPy covariance heatmap (time 0 at top), consistent with the numerical matrix in Table~\ref{tab1}.}
 \label{fig:qmcpy_quantlib_comparison}
 \end{figure}
@@ -220,7 +220,7 @@ Figure~\ref{fig:gbm_performance} presents the results of our performance analysi
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{GBM/images//figure_6.png}
+        \includegraphics[width=\textwidth]{GBM/images/figure_6.png}
         %\caption{Performance vs Number of Time Steps}
         %\label{subfig:performance}
     \end{subfigure}
@@ -235,7 +235,7 @@ To further validate these performance findings, we conducted an extended paramet
     \centering
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{GBM/images//figure_7.png}
+        \includegraphics[width=\textwidth]{GBM/images/figure_7.png}
         %\caption{Performance vs Number of Time Steps}
         \label{subfig:performance_steps2}
     \end{subfigure}
@@ -257,7 +257,7 @@ The class uses vectorized NumPy operations to generate entire arrays of GBM path
 The parent class \texttt{BrownianMotion} generates standard BM sample paths using the specified sampler (e.g., low-discrepancy lattice, IID uniform), with drift and diffusion handled in the mean and covariance structure.
 \item  The GBM class transforms the BM samples via the exponential mapping \eqref{gbm}, performed in a fully vectorized fashion, ensuring that thousands of paths can be efficiently simulated.
 \end{enumerate}
-The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging \href{https://numpy.org/devdocs/user/basics.broadcasting.html}{NumPy’s broadcasting} for efficient computations. (Briefly, broadcasting in NumPy allows arithmetic operations between arrays of different shapes by automatically expanding the smaller array to match the shape of the larger array.)
+The class computes and stores the theoretical mean and covariance matrices for GBM at initialization, which can be used for validation and theoretical comparisons. Both mean and covariance are calculated using analytical formulas, leveraging \href{https:/numpy.org/devdocs/user/basics.broadcasting.html}{NumPy’s broadcasting} for efficient computations. (Briefly, broadcasting in NumPy allows arithmetic operations between arrays of different shapes by automatically expanding the smaller array to match the shape of the larger array.)
 
  The Gaussian and BM classes both implement Cholesky and PCA factorization of the covariance matrix
 \[
@@ -290,13 +290,13 @@ Glasserman, P. (2003). \textit{Monte Carlo Methods in Financial Engineering}. Sp
 \bibitem[2]{choi2022}
 Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2022).
 Quasi-Monte Carlo Software. In A. Keller (Ed.), \textit{Monte Carlo and Quasi-Monte Carlo Methods}.
-Springer International Publishing. DOI: \url{https://doi.org/10.1007/978-3-030-98319-2_2}.
+Springer International Publishing. DOI: \url{https:/doi.org/10.1007/978-3-030-98319-2_2}.
 
 \bibitem[3]{qmcpy2023}
 Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin, A. G. (2020--2025).
 QMCPy: A quasi-Monte Carlo Python Library (Version 2.1).
-DOI: \url{https://doi.org/10.5281/zenodo.16822646}. 
-Retrieved from \url{https://www.qmcpy.org}.
+DOI: \url{https:/doi.org/10.5281/zenodo.16822646}. 
+Retrieved from \url{https:/www.qmcpy.org}.
 
 \bibitem[4]{hull2017}
 Hull, J. C. (2017). \textit{Options, Futures, and Other Derivatives} (10th ed.). Pearson.
@@ -307,7 +307,7 @@ Ross, S. M. (2014). \textit{Introduction to Probability Models} (11th ed.). Acad
 \bibitem[6]{quantlib} 
 The QuantLib contributors (2003--2025). 
 QuantLib: A free/open-source library for quantitative finance (Version 1.38).
-DOI: \url{https://doi.org/10.5281/zenodo.1440997}. 
-Retrieved from \url{https://www.quantlib.org}.
-% https://github.com/lballabio/QuantLib/commit/87c5ee2e17e9dd17488ec9957159b89db18d5d26
+DOI: \url{https:/doi.org/10.5281/zenodo.1440997}. 
+Retrieved from \url{https:/www.quantlib.org}.
+% https:/github.com/lballabio/QuantLib/commit/87c5ee2e17e9dd17488ec9957159b89db18d5d26
 \end{thebibliography}
