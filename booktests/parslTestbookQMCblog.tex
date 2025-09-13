@@ -1,6 +1,6 @@
 \begin{comment}
 \title{parslTestbookQMCblog}
-\author{Dr. Sou-Cheng Choi, Illinois Tech and  SouLab, Joshua Jay Herman (QMC Development Team)}
+\author{Dr. Sou-Cheng Choi, Illinois Tech and SouLab, Joshua Jay Herman (QMC Development Team)}
 \date{September 2025}
 
 \maketitle
@@ -9,13 +9,42 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Introduction}
 
-The main goal for distributing the testing of our notebooks is that we need our software that we release to be reproducable and they are resource intensive to execute. Testbook was chosen because we could seperate our unit tests that wouldn't have to be executed with our notebooks. This also had the side effect that we could also have parsl execute our testbook tests. Right now we only made simple 
+
+ This provides a summary of a speedup of notebook regression testing presented in my talk at Parsl Fest, sponsored by Globus Compute, and highlights subsequent directions of the work. It is joint work with Dr. Sou-Cheng Choi at Illinois Tech and SouLab LLC. Regression testing of notebooks is massively parallel and resource intensive.
+
+\subsection{Methodology}
+ Choosing Testbook allowing them to run independently without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl execute our testbook tests since it is embarrassingly parallel.
 
 \subsection{Results}
-To make sure that our test harness would be effective and would not slow down our initial tests we setup testbook tests that would make sure our notebooks would execute without syntax errors and got a 2.16x percent speedup. After adding more tests of the notebooks we still see a 1.36x percent speedup which is encouraging and expected. Also, even if the testbook test harness would not show an increase we also know that testbook workloads could als 
+To determine a baseline speedup with a subset of notebooks that were tested we saw a ~2.1x speedup. After increasing our test coverage that expanded our work to look for syntax errors we see now a ~4x speedup which is consistant with our expectations. 
+
+
+\begin{figure}[tbp]
+\centering
+\begin{subfigure}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{booktests/parsl_speedup_chart_no_x_lines.png}
+\caption{}
+\label{fig:bm_iid}
+\end{subfigure}
+
+\end{figure}
+
 
 \subsection{Further Work}
 
-Continuing our test coverage to first get full Juypter notebooks tests using our testbook test hanress would be the primary goal of the system. Extending to our doctest and pytests would have to first be evaluated and implemented 
+Due to the above results this points to the fact that we should extend to our testing to doctest and pytests in Parsl.
 
-At the presentation of this work to the Parsl group they suggested that this distributed testbook system is quite general. One way to apply this is to make the test harness not dependant on qmcpy but instead a separate package that could execute pytest tests not limited to testbook such as doctests, pytest , unittests and Cucumber tests.
+Now since many people have multi-core processors we can make our individuals be more productive so that our tests can show no regressions have been introduced faster.
+
+Quasi-Monte Carlo methods also require the evaluation of large random numbers in RAM. This is because algorithm or strategy must outperform traditional Monte Carlo methods which creates random amounts of data to compare with. An obvious solution would be to allow for remote execution of the workloads on a computer that already has large amounts of RAM so that there results can not only be done faster but also be proven to be correct.
+
+The last but not least of the feedback of the presentation of this work to the Parsl group would be that the system is very general. This implies that distributed test system could be interesting to users of Parsl for them to distribute their own test workloads. 
+Also, extending our work to not just test Juypter notebooks but also Python based doctests, unit testing using pytest and or unittests and Cucumber tests for Behavior-Driven Development.
+
+
+TODO 
+Github actions
+Put img here
+Add refrences to parsl projects
+work on wording suggestions.
