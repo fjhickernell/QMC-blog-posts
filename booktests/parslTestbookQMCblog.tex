@@ -9,15 +9,16 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Introduction}
 
-
  This blog provides a summary of the speedup of notebook regression testing presented in our talk at ParslFest [1] %, sponsored by Globus Compute, 
  and highlights the subsequent directions of the work. Regression testing of notebooks is massively parallel and resource-intensive.
 
 \subsection{Methodology}
+
  Choosing Testbook \cite{} was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl [2] execute our testbook unittests since it is embarrassingly parallel.
 
 \subsection{Results}
-To determine a baseline speedup with a subset of notebooks, we saw a  speedup. 
+
+To determine a baseline speedup with a subset of notebooks, we saw a speedup. 
 After increasing our test coverage, which expanded our work to look for syntax errors in more notebooks, 
 we now see a 4.4x speedup, which is consistent with our expectations. 
 
@@ -53,7 +54,5 @@ Choi, S.-C. T., Hickernell, F. J., Jagadeeswaran, R., McCourt, M. J., \& Sorokin
 QMCPy: A quasi-Monte Carlo Python Library (Version 2.1).
 DOI: \url{https:/doi.org/10.5281/zenodo.16822646}. 
 Retrieved from \url{https:/www.qmcpy.org}.
-
-
 
 \end{thebibliography}
