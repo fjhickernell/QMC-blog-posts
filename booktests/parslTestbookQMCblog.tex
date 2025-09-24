@@ -14,7 +14,7 @@ Accelerating QMCpy Notebook Tests with Parsl
  and highlights the subsequent directions of the work. Regression testing of notebooks is massively parallel and resource-intensive.
 
 \subsection{Methodology}
- Choosing Testbook \cite{} was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, which we already have implemented other tests. of without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl [2] execute our testbook unittests since it is embarrassingly parallel.
+ Choosing Testbook \cite{} was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, which we have already implemented other tests without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl [2] execute our testbook unittests since it is embarrassingly parallel.
 
 \subsection{Results}
 To determine a baseline speedup with a subset of notebooks we saw a  speedup. 
@@ -37,14 +37,8 @@ Due to the above results, this points to the fact that we should extend our test
 Now, since many people have multi-core processors, we can make our individuals more productive so that our tests can show that no regressions have been introduced faster.
 
 The last but not least of the feedback of the presentation of this work to the Parsl group would be that the system is very general. This implies that a distributed test system could be interesting for Parsl users to distribute their own test workloads. 
-Also, extending our work to not just test Juypter notebooks but also Python based doctests, unit testing using pytest and or unitteSCsts and Cucumber tests for Behavior-Driven Development.
+Also, extending our work to not just test Jupyter notebooks but also Python-based doctests, unit testing using pytest and/or unittest and Cucumber tests for Behavior-Driven Development.
 
-
-%TODO 
-%Github actions? Done
-%Put img here Done 
-%Add refrences to parsl projects done
-%work on wording suggestions.Done
 
 \begin{thebibliography}{6}
 
