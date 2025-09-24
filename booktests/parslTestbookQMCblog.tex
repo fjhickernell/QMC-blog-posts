@@ -10,34 +10,34 @@ Accelerating QMCpy Notebook Tests with Parsl
 \subsection{Introduction}
 
 
- This provides a summary of the speedup of notebook regression testing presented in my talk at Parsl Fest [1] , sponsored by Globus Compute, and highlights the subsequent directions of the work. It is joint work with Dr. Sou-Cheng Choi at Illinois Tech and SouLab LLC. Regression testing of notebooks is massively parallel and resource intensive.
+ This blog provides a summary of the speedup of notebook regression testing presented in our talk at ParslFest [1] %, sponsored by Globus Compute, 
+ and highlights the subsequent directions of the work. Regression testing of notebooks is massively parallel and resource-intensive.
 
 \subsection{Methodology}
- Choosing Testbook was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, which we already have implemented other tests. of without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl [2] execute our testbook unittests since it is embarrassingly parallel.
+ Choosing Testbook \cite{} was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, which we already have implemented other tests. of without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl [2] execute our testbook unittests since it is embarrassingly parallel.
 
 \subsection{Results}
 To determine a baseline speedup with a subset of notebooks we saw a  speedup. 
 After increasing our test coverage, which expanded our work to look for syntax errors in more notebooks, 
-we see now a ~4x speedup which is consistent with our expectations. 
+we see now a 4x speedup which is consistent with our expectations. 
 
-\noindent
-\begin{minipage}{0.49\textwidth}
+\begin{center}
+%\begin{minipage}{0.7\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{booktests/parsl_speedup_chart_no_x_lines.png}
-    \captionof{figure}{Parsl speedup chart without x-axis lines}
-    \label{fig:bm_iid}
-\end{minipage}
+    \includegraphics[width=.7\textwidth]{booktests/parsl_speedup_chart_no_x_lines.png}
+    \captionof{figure}{Parallel testing speedup achieved using Parsl framework across varying numbers of processor cores}
+    \label{fig:parsl_speedup}
+%\end{minipage}
+\end{center}
 
 \subsection{Further Work}
 
-Due to the above results, this points to the fact that we should extend to our testing to doctest and pytests in Parsl.
+Due to the above results, this points to the fact that we should extend our testing to doctest and pytests in Parsl.
 
 Now, since many people have multi-core processors, we can make our individuals more productive so that our tests can show that no regressions have been introduced faster.
 
-
 The last but not least of the feedback of the presentation of this work to the Parsl group would be that the system is very general. This implies that a distributed test system could be interesting for Parsl users to distribute their own test workloads. 
-Also, extending our work to not just test Juypter notebooks but also Python based doctests, unit testing using pytest and or unittests and Cucumber tests for Behavior-Driven Development.
-
+Also, extending our work to not just test Juypter notebooks but also Python based doctests, unit testing using pytest and or unitteSCsts and Cucumber tests for Behavior-Driven Development.
 
 
 %TODO 
