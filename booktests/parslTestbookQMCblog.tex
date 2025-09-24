@@ -19,14 +19,13 @@ Accelerating QMCpy Notebook Tests with Parsl
 \subsection{Results}
 
 To determine a baseline speedup with a subset of notebooks, we saw a speedup. 
-After increasing our test coverage, which expanded our work to look for syntax errors in more notebooks, 
-we now see a 4.4x speedup, which is consistent with our expectations. 
+After increasing our test coverage, which expanded our work to look for syntax errors in more notebooks, we now see a 4.4x speedup, which is consistent with our expectations. 
 
 \begin{center}
 %\begin{minipage}{0.7\textwidth}
     \centering
     \includegraphics[width=.7\textwidth]{booktests/parsl_speedup_chart_no_x_lines.png}
-    \captionof{figure}{Parallel testing speedup achieved using the Parsl framework across varying numbers of processor cores}
+    \captionof{figure}{Parallel testing speedup using Parsl against sequential execution of tests.}
     \label{fig:parsl_speedup}
 %\end{minipage}
 \end{center}
@@ -38,8 +37,17 @@ Due to the above results, this points to the fact that we should extend our test
 Now, since many people have multi-core processors, we can make our individuals more productive so that our tests can show that no regressions have been introduced faster.
 
 Last but not least of the feedback on the presentation of this work to the Parsl group would be that the system is very general. This implies that a distributed test system could be interesting for Parsl users to distribute their own test workloads. 
-Also, extending our work to not just test Jupyter notebooks, but also Python-based doctests, unit testing using pytest and/or unittest, and Cucumber tests for Behavior-Driven Development.
+Also, extending our work to not just test Jupyter notebooks, but also Python-based doctests, unit testing using pytest and/or unittest.
 
+\scnote{
+\begin{enumerate}
+    \item Add citation for `testbook`
+    
+     \item All references and figures need to be referenced in the text. In particular, Figure 5 and reference [3] require in-text citations.
+    
+     \item How to apply ``Cucumber tests for Behavior-Driven Development'' in QMCPy?
+\end{enumerate}
+}
 
 \begin{thebibliography}{6}
 
@@ -55,4 +63,6 @@ QMCPy: A quasi-Monte Carlo Python Library (Version 2.1).
 DOI: \url{https:/doi.org/10.5281/zenodo.16822646}. 
 Retrieved from \url{https:/www.qmcpy.org}.
 
+\bibitem[4]{nteract contributors. 2021. testbook: unit testing framework for Jupyter notebooks. version 0.4.2. (2021). https://github.com/nteract/testbook. Accessed: Sept. 23, 2025.}
 \end{thebibliography}
+
