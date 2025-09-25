@@ -9,17 +9,17 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Introduction}
 
- This blog provides a summary of the speedup of notebook regression testing presented in our talk at ParslFest \cite{parslfest2025} 
- and highlights the subsequent directions of the work. Regression testing of notebooks for QMCPy \cite{QMCPy2020a} is massively parallel and resource-intensive.
+ This blog summarizes the speedup of notebook regression testing presented in our talk at ParslFest \cite{parslfest2025} 
+ and highlights subsequent directions of the work. Regression testing of notebooks for QMCPy \cite{QMCPy2020a} is massively parallel and resource-intensive.
 
 \subsection{Methodology}
 
- Choosing Testbook \cite{testbook2021} was primarily motivated by the usability of actually writing a test (one that would even execute the notebook itself). It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unittests since it is embarrassingly parallel.
+ Choosing Testbook \cite{testbook2021} was primarily motivated by the usability of writing a test that can execute the notebook itself. It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests since it is embarrassingly parallel.
 
 \subsection{Results}
 
-To determine a baseline speedup with a subset of notebooks, we saw a speedup. 
-After increasing our test coverage, which expanded our work to look for syntax errors in more notebooks, we now see a 4.4x speedup, which is consistent with our expectations, as shown in Figure~\ref{fig:parsl_speedup}. 
+To determine a baseline speedup with a subset of notebooks, we observed a speedup. 
+After expanding our test coverage to search for syntax errors in additional notebooks, we now see a 4.4-fold speedup, which is consistent with our expectations, as illustrated in Figure~\ref{fig:parsl_speedup}. 
 
 \begin{figure}[htbp]
     \centering
@@ -32,12 +32,13 @@ After increasing our test coverage, which expanded our work to look for syntax e
 
 \subsection{Further Work}
 
-Due to the above results, this points to the fact that we should extend our testing to doctest and pytests in Parsl.
+Due to the above results, this indicates that we should extend our testing to doctest and pytests in Parsl.
 
-Now, since many people have multi-core processors, we can make our individuals more productive so that our tests can show that no regressions have been introduced faster.
+Now, because many people have multi‑core processors, we can increase individual productivity so that our tests can demonstrate that no regressions have been introduced.
 
-Last but not least of the feedback on the presentation of this work to the Parsl group would be that the system is very general. This implies that a distributed test system could be interesting for Parsl users to distribute their own test workloads. 
-Also, extending our work to not just test Jupyter notebooks, but also Python-based doctests, adding new testing such as Behavior-Driven Development using Cucumber \cite{cucumber2025}, unit testing using pytest and/or unittest.
+Finally, regarding feedback on the presentation to the ParslFest participants, the system is quite general. This suggests a distributed test system could benefit Parsl users by enabling them to distribute their own test workloads.
+
+Furthermore, we could expand our work to encompass Python-based doctests and Behavior-Driven Development with Cucumber \cite{cucumber2025}, as well as unit testing using pytest and/or unittest, in addition to testing Jupyter notebooks.
 
 \scnote{How to apply ``Cucumber tests for Behavior-Driven Development'' in QMCPy?}
 
