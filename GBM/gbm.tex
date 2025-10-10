@@ -1,4 +1,3 @@
-
 \begin{tcolorbox}[title=Quick Start,colback=blue!1,colframe=blue!30!black,breakable]
 Install the required Python packages:
 %
@@ -349,6 +348,10 @@ remain strictly positive (with strict‐positivity checks raising warnings or
 errors if violated).
 
 \bigskip
+\subsection{Conclusion and Future Work}
+
+QMCPy's implementation offers an efficient and generally more accurate method of modeling geometric Brownian motion. While QuantLib's standard uniform IID sampler yields slightly lower mean error for a larger number of paths and time steps than Qmcpy's IID, it is slower in generating a larger number of paths. In contrast, Qmcpy's Sobol sampler produces a significantly lower mean error and is faster in generating sample paths. We also compared the performance of other low-discrepancy samplers available in QMCPy. The IID has the largest mean error compared to low-discrepancy samplers, but it has a similar runtime to the lattice and Sobol samplers. Halton can reach the lowest mean error among all samplers in fewer paths, but it is the slowest. Sobol shows almost constant mean error across all time steps and a decreasing mean error for a larger number of paths. In the future, we aim to investigate ways to improve the runtime of the Halton sampler (Figure \ref{fig:gbm_performance2}).
+
 \begin{tcolorbox}[title=Takeaways,colback=blue!1,colframe=blue!30!black]
 To the best of our knowledge, this blog presents the first publicly available
 benchmark comparing QuantLib and QMCPy for Geometric Brownian Motion (GBM)
@@ -358,9 +361,9 @@ simulations. Key takeaways include:
     covariance decompositions.
     \item Accuracy: QMCPy's GBM matches QuantLib and theoretical moments, with
     superior numerical accuracy for quasi-Monte Carlo samplers (see
-    Table~\ref{tab2}).
+    Table~\ref{tab2}). The Halton sampler yields the smallest mean error, Sobol provides consistently low error across all time steps and shows improvement as number of paths increases, and the lattice sampler improves with more paths but remains less accurate than Sobol.
     \item Speed: Vectorized operations and optimized memory management produce
-    1.5 to 2 times faster path generation in QMCPy than QuantLib.
+    1.5 to 2 times faster path generation in QMCPy than QuantLib (see Figure \ref{fig:gbm_performance}). Future work could focus on improving the runtime of the Halton sampler.
 \end{itemize}
 \end{tcolorbox}
 
