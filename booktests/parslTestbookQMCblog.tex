@@ -9,12 +9,12 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Introduction}
 
- This blog summarizes the speedup of notebook regression testing presented in our talk at ParslFest \cite{parslfest2025} 
- and highlights subsequent directions of the work. Regression testing of notebooks for QMCPy \cite{QMCPy2020a} is massively parallel and resource-intensive.
+ This blog post summarizes the speedup of notebook regression testing presented in our talk at ParslFest 2025 \cite{parslfest2025} 
+ and highlights subsequent directions of the work. Regression testing of notebooks for QMCPy \cite{QMCPy2020a} is massively parallel and resource-intensive. The slides can be found at \href{https://github.com/QMCSoftware/QMCSoftware/raw/refs/heads/parsl_presentation/demos/talk_paper_demos/Parslfest_2025/Parsl%20Testbook%20Speedup.pptx}{Parsl Testbook Speedup}
 
 \subsection{Methodology}
 
- Choosing Testbook \cite{testbook2021} was primarily motivated by the usability of writing a test that can execute the notebook itself. It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. Then we made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests since it is embarrassingly parallel.
+ Choosing Testbook \cite{testbook2021} is motivated by the ability of writing a test that can execute the notebook itself and it also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. We made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests since it is embarrassingly parallel problem..
 
 \subsection{Results}
 
@@ -28,7 +28,7 @@ After expanding our test coverage to search for syntax errors in additional note
     \label{fig:parsl_speedup}
 \end{figure}
 
-\scnote{Add details about architecture where the speedup were observed.}
+This was tested on a Linux system running on an AMD64 architecture with 16 CPU cores. If you want to run the tests we have made for QMCPy you can run 'make testbook'
 
 \subsection{Further Work}
 
@@ -39,13 +39,3 @@ Now, because many people have multi‑core processors, we can increase individua
 Furthermore, regarding feedback on the presentation to the ParslFest participants, the system is quite general. This suggests a distributed test system could benefit Parsl users by enabling them to distribute their own test workloads.
 
 Finally, we could expand our work to encompass Python doctests, as well as unit testing using pytest or unittest, in addition to testing Jupyter notebooks.
-
-
-\scnote{Will put it in subfolder Add a link to the presentation slides and notebooks}
-
-\scnote{add make testbook and add to readme on running juypter notebook tests}
-
-\scnote{workflow fixing to github actions ask IIT person presentation}
-
-
-
