@@ -1,6 +1,6 @@
 \begin{comment}
 \title{parslTestbookQMCblog}
-\author{Dr. Sou-Cheng Choi, Illinois Tech and SouLab, Joshua Jay Herman (QMC Development Team)}
+\author{Joshua Jay Herman (QMC Development Team),  Brandon Sharp, and Sou-Cheng Choi (Illinois Tech and SouLab LLC)}
 \date{September 2025}
 
 \maketitle
@@ -14,7 +14,7 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Methodology}
 
- Choosing Testbook \cite{testbook2021} is motivated by the ability of writing a test that can execute the notebook itself and it also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. We made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests since it is embarrassingly parallel problem..
+ Choosing Testbook \cite{testbook2021} is motivated by the ability to write a test that can execute the notebook itself. It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. We made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests, an it is an embarrassingly parallel problem.
 
 \subsection{Results}
 
@@ -27,14 +27,41 @@ After expanding our test coverage to search for syntax errors in additional note
     \caption{Parallel testing speedup using Parsl against sequential execution of tests.}
     \label{fig:parsl_speedup}
 \end{figure}
+% import matplotlib.pyplot as plt
+%
+%# Data
+%labels = ["Sequential", "Parsl Parallel"]
+%times = [7133.85, 1621.82]
+%
+%# Compute speedup
+%speedup = times[0] / times[1]
+%
+%plt.figure(figsize=(8, 6))
+%bars = plt.bar(labels, times, color=["blue", "purple"])
+%plt.ylabel("Execution Time (seconds)")
+%plt.title(f"Execution Times with Parsl (Speedup by Parsl: {speedup:.2f}x)")
+%
+%# Annotate bars with exact values
+%for bar, t in zip(bars, times):
+%    height = bar.get_height()
+%    plt.text(
+%        bar.get_x() + bar.get_width() / 2,
+%        height,
+%        f"{t:.2f}",
+%        ha="center",
+%        va="bottom",
+%    )
+%
+%plt.tight_layout()
+%plt.show()
 
-This was tested on a Linux system running on an AMD64 architecture with 16 CPU cores. If you want to run the tests we have made for QMCPy you can run 'make testbook'
+This was tested on a Linux system running on an AMD64 architecture with 16 CPU cores. If you want to run the tests we have made for QMCPy, you can run 'make testbook'
 
 \subsection{Further Work}
 
-Due to the above results, this indicates that we should extend our testing to doctest and pytests in Parsl.
+Due to the above results, this indicates that we should extend our testing to doctest and `pytest` in Parsl.
 
-Now, because many people have multi‑core processors, we can increase individual productivity so that our tests can demonstrate that no regressions have been introduced.
+Now, because many people have multicore processors, we can increase individual productivity so that our tests can demonstrate that no regressions have been introduced.
 
 Furthermore, regarding feedback on the presentation to the ParslFest participants, the system is quite general. This suggests a distributed test system could benefit Parsl users by enabling them to distribute their own test workloads.
 
