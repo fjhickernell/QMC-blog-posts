@@ -9,7 +9,7 @@ Accelerating QMCpy Notebook Tests with Parsl
 
 \subsection{Introduction}
 
-Notebook regression testing ensures that interactive examples and analyses
+Notebook regression testing \scnote{is it regression testing or unit testing?} ensures that interactive examples and analyses
 remain correct and reproducible, catching regressions introduced by changes in
 code, dependencies, or execution environments. For QMCPy \cite{QMCPy2020a}, this
 process is both massively parallel and resource-intensive due to the number and
@@ -22,11 +22,54 @@ directions for further development.
 
 The slides accompanying the presentation are available at:
 \href{https://github.com/QMCSoftware/QMCSoftware/raw/refs/heads/parsl_presentation/demos/talk_paper_demos/Parslfest_2025/Parsl%20Testbook%20Speedup.pptx}{Parsl Testbook Speedup}.
-
+\scnote{Link broken.}
 
 \subsection{Methodology}
 
- Choosing Testbook \cite{testbook2021} is motivated by the ability to write a test that can execute the notebook itself. It also fits well with our tests in a separate directory, where we have already implemented other tests without requiring execution of the full notebooks for clarity. We made a test harness that we could also have Parsl \cite{parsl2019} execute our testbook unit tests, an it is an embarrassingly parallel problem.
+Our choice to adopt Testbook \cite{testbook2021} is motivated by its ability to
+execute Jupyter notebooks directly within a test environment, enabling
+fine-grained validation of both code cells and notebook state. Testbook also
+integrates cleanly with our existing testing directory structure, where other
+unit tests are organized without requiring full notebook execution. This
+preserves modularity, simplifies debugging, and avoids unnecessary duplication
+of logic.
+
+To support scalable notebook testing, we developed a lightweight yet flexible
+test harness that enables Parsl \cite{parsl2019} to orchestrate Testbook-based
+unit tests. By treating each notebook test as an independent Parsl app, the
+harness realizes an embarrassingly parallel workflow suitable for local
+multiprocessing, HPC schedulers, or cloud environments.
+
+The harness coordinates three primary components to achieve reproducible,
+high-throughput notebook testing:
+
+\begin{itemize}
+    \item \textbf{Continuous Integration (CI):} A GitHub Actions workflow
+    prepares the execution environment (Conda environment creation, minimal
+    \LaTeX{} installation, optional swap configuration), installs project
+    dependencies, and triggers the appropriate test targets (e.g.,
+    \texttt{make booktests\_parallel\_no\_docker}). This ensures consistent,
+    version-controlled execution across platforms.
+
+    \item \textbf{Parsl controller and workers:} Parsl provisions local or
+    remote executors---processes, threads, or cluster jobs---and schedules
+    notebook tests as independent tasks. This enables parallel execution with
+    configurable concurrency limits, resource profiles, and executor backends.
+
+    \item \textbf{Testbook runner and artifact collection:} Each worker
+    executes its assigned notebook tests through Testbook. Outputs, execution
+    logs, error traces, generated figures, and notebook artifacts with executed
+    cells are returned to the Parsl controller and uploaded by CI for
+    inspection, provenance tracking, and debugging.
+\end{itemize}
+
+Key features of the harness include pinned Conda environment specifications for
+reproducibility, customizable Parsl executors (local, HPC, or cloud), timeout
+and retry policies for handling flaky or long-running tests, and centralized
+logging to streamline diagnosis of failures. Together, these components provide
+a robust framework for scalable, automated validation of computational
+notebooks.
+
 
 \subsection{Results}
 
