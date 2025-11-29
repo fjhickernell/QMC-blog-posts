@@ -106,7 +106,7 @@ notebooks and their corresponding generated test files.
 
 \begin{table}[h]
 \centering
-\caption{Performance and coverage summary for the QMCPy Testbook suite.}
+\caption{Coverage summary for the QMCPy Testbook suite.}
 \label{tab:coverage_summary}
 \begin{tabular}{l r l}
 \hline
@@ -132,6 +132,70 @@ Workflow runs the \texttt{make} targets and executes \\
     out-of-memory failures.
 \end{itemize}
 
+\subsection*{CI Tests (from \texttt{.github/workflows/booktests.yml})}
+
+This section summarizes how the CI workflow executes the notebook-based tests
+and how to inspect or extend the run.
+
+\begin{itemize}
+    \item The workflow checks out the repository, sets up Miniconda, and installs
+    project test extras (\texttt{pip install -e .[test]}) plus additional optional
+    extras (\texttt{test\_torch}, \texttt{test\_gpytorch}, etc.).
+    
+    \item It creates a 12~GB swap file early in the job to reduce out-of-memory
+    failures for memory-heavy notebooks.
+    
+    \item The workflow ensures that \texttt{test/booktests/tb\_*.py} files exist
+    by running \texttt{make check\_booktests} and \texttt{make generate\_booktests}.
+    
+    \item The final step runs the test target, e.g.,
+    \texttt{make booktests\_parallel\_no\_docker} (or
+    \texttt{make booktests\_no\_docker} for sequential execution). This target
+    executes the generated \texttt{tb\_*.py} tests (one per notebook) using
+    \texttt{pytest}/\texttt{testbook}.
+\end{itemize}
+
+\paragraph{Debugging and diagnostics.}
+\begin{itemize}
+    \item Setting \texttt{ACTIONS\_STEP\_DEBUG: true} at the job level enables
+    more verbose step logs.
+    
+    \item Add quick diagnostic lines in the workflow to show runner resources:
+\begin{verbatim}
+- name: Show runner resources
+  run: |
+    echo "CPUs: $(nproc)"
+    free -h
+    df -h
+\end{verbatim}
+
+    \item To capture timings and logs, wrap the \texttt{make} invocation with
+    \texttt{/usr/bin/time -v} and upload the output using
+    \texttt{actions/upload-artifact@v4}.
+\end{itemize}
+
+\paragraph{Parallelism and resource tuning.}
+\begin{itemize}
+    \item The GitHub runner provides 2~vCPUs by default; the Parsl demo notebook
+    may request more workers (e.g., \texttt{max\_workers = 8}). Consider adapting
+    the notebook to:
+\begin{verbatim}
+max_workers = min(8, os.cpu_count() or 1)
+\end{verbatim}
+    so that it respects available runner resources.
+    
+    \item If CI encounters memory pressure, run the sequential
+    \texttt{booktests\_no\_docker} target or constrain \texttt{-j} parallelism
+    in the \texttt{Makefile} target.
+\end{itemize}
+
+\paragraph{Extensibility.}
+\begin{itemize}
+    \item Cache package installs using \texttt{actions/cache} to speed up CI runs.
+    \item Upload per-notebook HTML or output artifacts for post-failure inspection.
+    \item Add a lightweight timing reporter (CSV) in \texttt{test/booktests/}
+    and upload it from CI to track per-notebook runtimes over time.
+\end{itemize}
 
 \subsection{Further Work}
 
