@@ -134,33 +134,25 @@ Workflow runs the \texttt{make} targets and executes \\
 
 \subsection*{CI Tests (from \texttt{.github/workflows/booktests.yml})}
 
-This section summarizes how the CI workflow executes the notebook-based tests
-and how to inspect or extend the run.
+The continuous integration workflow automates the execution of notebook-based
+tests and prepares a controlled environment for reproducible runs. The workflow
+checks out the repository, sets up Miniconda, installs the project’s test
+extras (\texttt{pip install -e .[test]}) along with optional components
+(\texttt{test\_torch}, \texttt{test\_gpytorch}, etc.), and creates a 12~GB swap
+file early in the job to reduce out-of-memory failures for notebooks with heavy
+memory demands.
 
-\begin{itemize}
-    \item The workflow checks out the repository, sets up Miniconda, and installs
-    project test extras (\texttt{pip install -e .[test]}) plus additional optional
-    extras (\texttt{test\_torch}, \texttt{test\_gpytorch}, etc.).
-    
-    \item It creates a 12~GB swap file early in the job to reduce out-of-memory
-    failures for memory-heavy notebooks.
-    
-    \item The workflow ensures that \texttt{test/booktests/tb\_*.py} files exist
-    by running \texttt{make check\_booktests} and \texttt{make generate\_booktests}.
-    
-    \item The final step runs the test target, e.g.,
-    \texttt{make booktests\_parallel\_no\_docker} (or
-    \texttt{make booktests\_no\_docker} for sequential execution). This target
-    executes the generated \texttt{tb\_*.py} tests (one per notebook) using
-    \texttt{pytest}/\texttt{testbook}.
-\end{itemize}
+To ensure notebook tests are present and up to date, the workflow invokes
+\texttt{make check\_booktests} and \texttt{make generate\_booktests}, which
+confirm or regenerate \texttt{test/booktests/tb\_*.py} files (one per demo
+notebook). The final step triggers the test target---typically
+\texttt{make booktests\_parallel\_no\_docker} for parallel execution or
+\texttt{make booktests\_no\_docker} for sequential execution. These targets run
+the generated tests via \texttt{pytest}/\texttt{testbook}.
 
-\paragraph{Debugging and diagnostics.}
-\begin{itemize}
-    \item Setting \texttt{ACTIONS\_STEP\_DEBUG: true} at the job level enables
-    more verbose step logs.
-    
-    \item Add quick diagnostic lines in the workflow to show runner resources:
+For diagnostics, setting \texttt{ACTIONS\_STEP\_DEBUG: true} increases log
+verbosity. Additional resource information may be printed using:
+
 \begin{verbatim}
 - name: Show runner resources
   run: |
@@ -169,33 +161,24 @@ and how to inspect or extend the run.
     df -h
 \end{verbatim}
 
-    \item To capture timings and logs, wrap the \texttt{make} invocation with
-    \texttt{/usr/bin/time -v} and upload the output using
-    \texttt{actions/upload-artifact@v4}.
-\end{itemize}
+Timing and memory usage can be captured by wrapping the \texttt{make} call with
+\texttt{/usr/bin/time -v} and uploading the resulting logs using the
+\texttt{actions/upload-artifact@v4} step.
 
-\paragraph{Parallelism and resource tuning.}
-\begin{itemize}
-    \item The GitHub runner provides 2~vCPUs by default; the Parsl demo notebook
-    may request more workers (e.g., \texttt{max\_workers = 8}). Consider adapting
-    the notebook to:
-\begin{verbatim}
-max_workers = min(8, os.cpu_count() or 1)
-\end{verbatim}
-    so that it respects available runner resources.
-    
-    \item If CI encounters memory pressure, run the sequential
-    \texttt{booktests\_no\_docker} target or constrain \texttt{-j} parallelism
-    in the \texttt{Makefile} target.
-\end{itemize}
+Parallel notebook execution must respect the resource limits of GitHub
+runners, which typically provide only two vCPUs. When notebooks request more
+workers (e.g., \texttt{max\_workers = 8}), adapting the code to
+\texttt{max\_workers = min(8, os.cpu\_count() or 1)} ensures compatibility. In
+cases of memory pressure, the workflow may fall back to the sequential
+\texttt{booktests\_no\_docker} target or reduce \texttt{-j} parallelism inside
+the \texttt{Makefile}.
 
-\paragraph{Extensibility.}
-\begin{itemize}
-    \item Cache package installs using \texttt{actions/cache} to speed up CI runs.
-    \item Upload per-notebook HTML or output artifacts for post-failure inspection.
-    \item Add a lightweight timing reporter (CSV) in \texttt{test/booktests/}
-    and upload it from CI to track per-notebook runtimes over time.
-\end{itemize}
+The workflow is readily extensible: caching package installations with
+\texttt{actions/cache} accelerates subsequent runs; notebook outputs and HTML
+artifacts can be uploaded for failure analysis; and a simple CSV timing log in
+\texttt{test/booktests/} can be collected to track notebook performance over
+time.
+
 
 \subsection{Further Work}
 
