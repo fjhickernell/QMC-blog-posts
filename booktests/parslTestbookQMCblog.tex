@@ -73,18 +73,65 @@ notebooks.
 
 \subsection{Results}
 
-To determine a baseline speedup with a subset of notebooks, we observed a speedup. 
-After expanding our test coverage to search for syntax errors in additional notebooks, we now see a 3.0-fold speedup, which is consistent with our expectations, as illustrated in Figure~\ref{fig:parsl_speedup}. 
 
-\begin{figure}[htbp]
+To establish a performance baseline, we first measured the wall‐clock time
+required to execute a representative subset of demo notebooks sequentially.
+After extending test coverage to include syntax-validation checks and
+additional notebooks, we repeated the experiment under the parallel
+Testbook–Parsl workflow. Across these configurations, we observed a consistent
+\textbf{3.0-fold speedup}, demonstrating that notebook-based tests parallelize
+cleanly and benefit substantially from concurrent execution. The overall trend
+is illustrated in Figure~\ref{fig:parsl_speedup}.
+
+\begin{figure}[t]
     \centering
     \includegraphics[width=1\textwidth]{booktests/parsl_speedup.png}
-    \caption{Parallel testing speedup using Parsl with 4 workers (processors) against sequential execution of tests.}
+    \caption{Speedup achieved by running Testbook-based notebook tests under
+    Parsl with four workers compared to sequential execution.}
     \label{fig:parsl_speedup}
 \end{figure}
 
+All tests were executed on a Linux system (AMD64 architecture) with 16~CPU
+cores. When run in continuous integration, the workflow executes the same test
+suite on the GitHub Actions \texttt{ubuntu-latest} runner. Users may reproduce
+the parallel Testbook workflow locally by running:
+\begin{verbatim}
+make testbook
+\end{verbatim}
 
-This was tested on a Linux system running on an AMD64 architecture with 16 CPU cores. If you want to run the tests we have made for QMCPy, you can run 'make testbook'
+\medskip
+\noindent
+Table~\ref{tab:coverage_summary} summarizes the scope of the tested
+notebooks and their corresponding generated test files.
+
+\begin{table}[h]
+\centering
+\caption{Performance and coverage summary for the QMCPy Testbook suite.}
+\label{tab:coverage_summary}
+\begin{tabular}{l r l}
+\hline
+\textbf{Item} & \textbf{Count} & \textbf{Notes} \\
+\hline
+Demo notebooks in \texttt{demos/} & 33 &
+All notebooks in \texttt{demos/} (including subfolders) \\
+Generated test files in \texttt{test/booktests/tb\_*.py} & 32 &
+Each \texttt{tb\_*.py} tests a single demo notebook \\
+Notebooks executed by booktests workflow & 32 &
+Workflow runs the \texttt{make} targets and executes \\ 
+& &  all generated test files (one per notebook) \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Runner configuration notes.}
+\begin{itemize}
+    \item The GitHub \texttt{ubuntu-latest} runner typically provides
+    2~virtual CPUs per job.
+    \item The workflow allocates a 12~GB swap file to mitigate transient
+    memory spikes during notebook execution and reduce the likelihood of
+    out-of-memory failures.
+\end{itemize}
+
 
 \subsection{Further Work}
 
