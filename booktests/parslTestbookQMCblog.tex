@@ -90,6 +90,15 @@ is illustrated in Figure~\ref{fig:parsl_speedup}.
     Parsl with four workers compared to sequential execution.}
     \label{fig:parsl_speedup}
 \end{figure}
+`
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1\textwidth]{booktests/parallel_times_speedup.png}
+    \caption{Speedup achieved by running Testbook-based notebook tests under
+    Parsl with various number of workers compared to sequential execution.}
+    \label{fig:parsl_speedup}
+\end{figure}
+
 
 All tests were executed on a Linux system (AMD64 architecture) with 16~CPU
 cores. When run in continuous integration, the workflow executes the same test
@@ -132,7 +141,7 @@ Workflow runs the \texttt{make} targets and executes \\
     out-of-memory failures.
 \end{itemize}
 
-\subsection*{CI Tests (from \texttt{.github/workflows/booktests.yml})}
+\subsection{CI Tests (from \texttt{.github/workflows/booktests.yml})}
 
 The continuous integration workflow automates the execution of notebook-based
 tests and prepares a controlled environment for reproducible runs. The workflow
@@ -151,22 +160,14 @@ notebook). The final step triggers the test target---typically
 the generated tests via \texttt{pytest}/\texttt{testbook}.
 
 For diagnostics, setting \texttt{ACTIONS\_STEP\_DEBUG: true} increases log
-verbosity. Additional resource information may be printed using:
-
-\begin{verbatim}
-- name: Show runner resources
-  run: |
-    echo "CPUs: $(nproc)"
-    free -h
-    df -h
-\end{verbatim}
+verbosity. 
 
 Timing and memory usage can be captured by wrapping the \texttt{make} call with
 \texttt{/usr/bin/time -v} and uploading the resulting logs using the
 \texttt{actions/upload-artifact@v4} step.
 
 Parallel notebook execution must respect the resource limits of GitHub
-runners, which typically provide only two vCPUs. When notebooks request more
+runners, which typically provide only two CPUs. When notebooks request more
 workers (e.g., \texttt{max\_workers = 8}), adapting the code to
 \texttt{max\_workers = min(8, os.cpu\_count() or 1)} ensures compatibility. In
 cases of memory pressure, the workflow may fall back to the sequential
