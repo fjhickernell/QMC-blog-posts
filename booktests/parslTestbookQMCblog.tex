@@ -74,14 +74,7 @@ notebooks.
 \subsection{Results}
 
 
-To establish a performance baseline, we first measured the wall‐clock time
-required to execute a representative subset of demo notebooks sequentially.
-After extending test coverage to include syntax-validation checks and
-additional notebooks, we repeated the experiment under the parallel
-Testbook–Parsl workflow. Across these configurations, we observed a consistent
-\textbf{3.0-fold speedup}, demonstrating that notebook-based tests parallelize
-cleanly and benefit substantially from concurrent execution. The overall trend
-is illustrated in Figure~\ref{fig:parsl_speedup}.
+To establish a performance baseline, we first measured the wall‐clock time required to execute a representative subset of demo notebooks sequentially. After extending test coverage to include syntax-validation checks and additional notebooks, we repeated the experiment under the parallel Testbook–Parsl workflow. Across these configurations, we observed a consistent \textbf{3.0-fold speedup}, demonstrating that notebook-based tests parallelize cleanly and benefit substantially from concurrent execution. The overall trend is illustrated in Figure~\ref{fig:parsl_speedup}.
 
 \begin{figure}[t]
     \centering
