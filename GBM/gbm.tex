@@ -213,10 +213,10 @@ high-performance applications. QuantLib remains the industry standard for
 production systems that require comprehensive support for financial modeling and
 risk management.
 
-\lstinputlisting[style=Python, caption={Function to generate GBM paths with
-    QuantLib.}, label={lst:quantlib} ]{GBM/code/quantlib_util.py}
+{\tiny\input{GBM/outputs/gbm_comparison_table.tex}}
 
-\input{GBM/outputs/gbm_comparison_table.tex}
+\newpage
+\lstinputlisting[style=Python, basicstyle=\footnotesize\ttfamily, caption={Function to generate GBM paths with QuantLib.}, label={lst:quantlib}]{GBM/code/quantlib_util.py}
 
  In Figure~\ref{fig:qmcpy_quantlib_comparison}, the top row shows sample paths:
  QMCPy on the left and QuantLib on the right. The bottom-left panel overlays the
@@ -275,17 +275,16 @@ parameter sweep analysis across a broader range of configurations.
 Figure~\ref{fig:gbm_performance2} presents the comprehensive results of this
 analysis, systematically examining performance across varying time steps and
 path counts. 
-\LarysaNote{
-Regarding accuracy, QMCPy's Sobol sampler generally achieves the lowest mean
+\begin{itemize}
+\item \LarysaNote{Regarding accuracy, QMCPy's Sobol sampler generally achieves the lowest mean
 absolute error (MAE), particularly when a larger number of paths are used,
 reaching errors below $10^{-3}$. %QMCPy's Sobol sampler demonstrates remarkable
 %consistency, maintaining relatively stable MAEs across different time steps and
 showing clear convergence improvements with more paths. The lattice sampler also
 provides competitive accuracy, especially with higher path counts. While
 QuantLib's standard uniform IID sampler yields slightly lower MAE for a larger
-number of paths compared to QMCPy's IID sampler, it is notably slower.
-}
-Regarding speed, low-discrepancy samplers like Sobol, lattice, and Halton
+number of paths compared to QMCPy's IID sampler, it is notably slower.}
+\item Regarding speed, low-discrepancy samplers like Sobol, lattice, and Halton
 demonstrate superior convergence rates with increasing path counts compared to
 IID methods. With QMCPy, Sobol and lattice samplers offer the best
 speed-accuracy trade-off. QuantLib achieves comparable runtime to QMCPy's faster
@@ -295,6 +294,7 @@ These results highlight QMCPy's quasi-Monte Carlo methods as particularly
 well-suited for applications requiring high accuracy, with Sobol and lattice
 samplers providing an optimal balance of speed and precision for most practical
 scenarios.
+\end{itemize}
 
 \begin{figure}[H]
     \centering
