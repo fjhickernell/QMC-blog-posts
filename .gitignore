@@ -6,3 +6,16 @@
 **.log
 **.fdb_latexmk
 **.pdf
+*.blg
+*.xml
+*.toc
+*.bcf
+*.bbl
+*.json
+.vscode/*
+*.pyc
+
+sc/
+sc_*
+tmp*
+*.bcf-SAVE-ERROR
